@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Resource Library</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body class="bg-gray-100 font-sans">
+    <div class="min-h-screen flex flex-col">
+        <header class="bg-blue-600 text-white py-6">
+            <div class="container mx-auto px-4">
+                <h1 class="text-3xl font-bold">Resource Library</h1>
+                <p class="text-lg mt-2">Access a world of knowledge through free digital libraries</p>
+            </div>
+        </header>
+
+        <main class="flex-grow container mx-auto px-4 py-8">
+            <section class="mb-8">
+                <div class="bg-yellow-100 border-l-4 border-yellow-500 text-yellow-700 p-4 mb-6" role="alert">
+                    <p class="font-bold">Safety Disclaimer</p>
+                    <p>While we strive to provide access to reputable resources, please exercise caution when accessing external websites and links. Always verify the authenticity of the sources and be mindful of your online safety.</p>
+                </div>
+
+                <div class="bg-white rounded-lg shadow-md p-6 mb-6">
+                    <h2 class="text-2xl font-semibold mb-4">Search Resources</h2>
+                    <div class="flex items-center border-b border-b-2 border-blue-500 py-2">
+                        <input id="search-input" class="appearance-none bg-transparent border-none w-full text-gray-700 mr-3 py-1 px-2 leading-tight focus:outline-none" type="text" placeholder="Search for resources..." aria-label="Search">
+                        <button id="search-button" class="flex-shrink-0 bg-blue-500 hover:bg-blue-700 border-blue-500 hover:border-blue-700 text-sm border-4 text-white py-1 px-2 rounded" type="button">
+                            Search
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+            <section id="resource-list" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- Resource cards will be dynamically populated here -->
+            </section>
+        </main>
+
+        <footer class="bg-gray-200 py-4 mt-8">
+            <div class="container mx-auto px-4 text-center text-gray-600">
+                <p>&copy; Step Mentor</p>
+            </div>
+        </footer>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            const resources = [
+                { name: "National Digital Library of India (NDLI)", url: "https://ndl.iitkgp.ac.in/", description: "A digital repository containing textbooks, articles, videos, audio books, lectures, simulations, fiction and all other kinds of learning media." },
+                { name: "DOAJ (Directory of Open Access Journals)", url: "https://doaj.org/", description: "An online directory that indexes and provides access to high quality, open access, peer-reviewed journals." },
+                { name: "National Repository of Open Educational Resources (NROER)", url: "https://nroer.gov.in/home/e-library/", description: "A collaborative platform for school and teacher education, offering a variety of resources in multiple languages." },
+                { name: "Swayam", url: "https://swayam.gov.in/", description: "A programme initiated by Government of India to achieve the three cardinal principles of Education Policy viz., access, equity and quality." },
+                { name: "Resource Library by Google Tech Dev Guide", url: "https://techdevguide.withgoogle.com/resources/", description: "A curated collection of resources for technical skill development, provided by Google." },
+                { name: "The Rising CEO", url: "https://www.therisingceo.com/", description: "A platform offering resources and guidance for aspiring and current CEOs and business leaders." },
+                { name: "Kimi Kinsey", url: "https://kimikinsey.com/", description: "A personal development and lifestyle blog offering resources on productivity, mindset, and self-improvement." },
+                { name: "Essential Grid", url: "https://essential-grid.com/", description: "A design resource offering grid templates and layouts for web and print projects." }
+            ];
+
+            function createResourceCard(resource) {
+                return `
+                    <div class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300">
+                        <div class="p-6">
+                            <h3 class="text-xl font-semibold mb-2">${resource.name}</h3>
+                            <p class="text-gray-600 mb-4">${resource.description}</p>
+                            <a href="${resource.url}" target="_blank" rel="noopener noreferrer" class="inline-block bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded transition duration-300 ease-in-out">
+                                Visit Resource
+                            </a>
+                        </div>
+                    </div>
+                `;
+            }
+
+            function displayResources(resourcesArray) {
+                const resourceList = $('#resource-list');
+                resourceList.empty();
+                resourcesArray.forEach(resource => {
+                    resourceList.append(createResourceCard(resource));
+                });
+            }
+
+            displayResources(resources);
+
+            $('#search-button').click(function() {
+                const searchTerm = $('#search-input').val().toLowerCase();
+                const filteredResources = resources.filter(resource =>
+                    resource.name.toLowerCase().includes(searchTerm) ||
+                    resource.description.toLowerCase().includes(searchTerm)
+                );
+                displayResources(filteredResources);
+            });
+
+            $('#search-input').on('keyup', function(e) {
+                if (e.key === 'Enter') {
+                    $('#search-button').click();
+                }
+            });
+        });
+    </script>
+</body>
+</html>

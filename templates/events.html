@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Virtual Events and Webinars</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.9.1/gsap.min.js"></script>
+    <style>
+        :root {
+            --primary-color: #4a90e2;
+            --secondary-color: #f39c12;
+            --background-color: #1a1a2e;
+            --card-background: rgba(45, 51, 60, 0.9);
+            --text-color: #ffffff;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: var(--background-color);
+            color: var(--text-color);
+            overflow-x: hidden;
+        }
+
+        header {
+            background-color: rgba(26, 26, 46, 0.8);
+            padding: 20px;
+            text-align: center;
+            position: fixed;
+            width: 100%;
+            z-index: 1000;
+            transition: all 0.3s ease;
+        }
+
+        header.scrolled {
+            padding: 10px;
+            background-color: rgba(26, 26, 46, 0.95);
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 2.8em;
+            font-weight: 600;
+            background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            transition: all 0.3s ease;
+        }
+
+        .container {
+            padding: 100px 20px 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .search-bar {
+            margin-bottom: 30px;
+            text-align: center;
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            padding: 10px;
+        }
+
+        .search-bar input {
+            padding: 12px;
+            border-radius: 25px;
+            border: none;
+            width: 300px;
+            outline: none;
+            font-size: 1em;
+            background-color: rgba(255, 255, 255, 0.1);
+            color: var(--text-color);
+            transition: all 0.3s ease;
+        }
+
+        .search-bar input:focus {
+            background-color: rgba(255, 255, 255, 0.2);
+            width: 350px;
+        }
+
+        .search-bar button {
+            padding: 12px 24px;
+            background-color: var(--primary-color);
+            border: none;
+            border-radius: 25px;
+            color: #ffffff;
+            cursor: pointer;
+            font-size: 1em;
+            transition: all 0.3s ease;
+        }
+
+        .search-bar button:hover {
+            background-color: var(--secondary-color);
+            transform: scale(1.05);
+        }
+
+        #eventContainer {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+        }
+
+        .event-card {
+            background: var(--card-background);
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+            transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            opacity: 1; /* Changed from 0 to 1 */
+            transform: translateY(0); /* Changed from translateY(50px) to 0 */
+        }
+
+        .event-card:hover {
+            transform: translateY(-10px) scale(1.02);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.3);
+        }
+
+        .event-card img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            transition: all 0.3s ease;
+        }
+
+        .event-card:hover img {
+            transform: scale(1.1);
+        }
+
+        .event-card-content {
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            flex-grow: 1;
+        }
+
+        .event-card-content h2 {
+            margin-top: 0;
+            font-size: 1.8em;
+            color: var(--primary-color);
+            transition: all 0.3s ease;
+        }
+
+        .event-card:hover .event-card-content h2 {
+            color: var(--secondary-color);
+        }
+
+        .event-card-content p {
+            font-size: 1em;
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+
+        .btn {
+            background-color: var(--primary-color);
+            color: #fff;
+            padding: 10px 20px;
+            text-decoration: none;
+            border-radius: 25px;
+            display: inline-block;
+            text-align: center;
+            transition: all 0.3s ease;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .btn:hover {
+            background-color: var(--secondary-color);
+            transform: scale(1.05);
+        }
+
+        footer {
+            background-color: rgba(26, 26, 46, 0.8);
+            padding: 20px;
+            text-align: center;
+            margin-top: 50px;
+        }
+
+        footer p {
+            margin: 0;
+            font-size: 0.9em;
+            opacity: 0.7;
+        }
+
+        .date-badge {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background-color: var(--secondary-color);
+            color: #fff;
+            padding: 5px 10px;
+            border-radius: 15px;
+            font-size: 0.8em;
+            font-weight: 600;
+        }
+
+        .category-filter {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .category-btn {
+            background-color: rgba(255, 255, 255, 0.1);
+            color: var(--text-color);
+            border: none;
+            padding: 8px 16px;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .category-btn.active, .category-btn:hover {
+            background-color: var(--primary-color);
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(50px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Virtual Events & Webinars</h1>
+    </header>
+    <div class="container">
+        <div class="search-bar">
+            <input type="text" id="searchInput" placeholder="Search for events...">
+            <button onclick="searchEvents()">Search</button>
+        </div>
+        <div class="category-filter">
+            <button class="category-btn active" data-category="all">All</button>
+            <button class="category-btn" data-category="webinar">Webinars</button>
+            <button class="category-btn" data-category="competition">Competitions</button>
+            <button class="category-btn" data-category="workshop">Workshops</button>
+        </div>
+        <div id="eventContainer">
+            <!-- Event cards will be dynamically added here -->
+        </div>
+    </div>
+    <footer>
+        <p></p>
+    </footer>
+    <script>
+        const events = [
+            {
+                title: "Webinar on Step Mentor",
+                description: "Join us for an insightful webinar discussing the uses and features of Step Mentor.",
+                image: "static/images/step_mentor.png",
+                category: "webinar",
+                date: "2024-05-15"
+            },
+            {
+                title: "Gemini AI Developers Competition",
+                description: "Participate in the Gemini AI Developers Competition and showcase your skills in AI development. Compete with the best in the industry and win exciting prizes!",
+                image: "/static/images/gemni.jpg",
+                category: "competition",
+                date: "2024-06-01"
+            },
+            {
+                title: "Machine Learning Workshop",
+                description: "Hands-on workshop on advanced machine learning techniques and their practical applications.",
+                image: "/api/placeholder/400/320",
+                category: "workshop",
+                date: "2024-05-20"
+            },
+            {
+                title: "Cybersecurity in the Digital Age",
+                description: "Learn about the latest trends and best practices in cybersecurity from industry experts.",
+                image: "/api/placeholder/400/320",
+                category: "webinar",
+                date: "2024-05-25"
+            }
+        ];
+
+        function createEventCard(event) {
+            const card = document.createElement('div');
+            card.className = 'event-card';
+            card.setAttribute('data-category', event.category);
+            card.setAttribute('data-title', event.title);
+
+            card.innerHTML = `
+                <img src="${event.image}" alt="${event.title}">
+                <div class="event-card-content">
+                    <h2>${event.title}</h2>
+                    <p>${event.description}</p>
+                    <a href="#" class="btn">Join Now</a>
+                </div>
+                <span class="date-badge">${event.date}</span>
+            `;
+
+            return card;
+        }
+
+        function renderEvents() {
+            const container = document.getElementById('eventContainer');
+            container.innerHTML = '';
+            events.forEach(event => {
+                const card = createEventCard(event);
+                container.appendChild(card);
+            });
+            animateCards();
+        }
+
+        function searchEvents() {
+            const searchInput = document.getElementById('searchInput').value.toLowerCase();
+            const eventCards = document.querySelectorAll('.event-card');
+
+            eventCards.forEach(card => {
+                const title = card.getAttribute('data-title').toLowerCase();
+                if (title.includes(searchInput)) {
+                    card.style.display = 'flex';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        }
+
+        function filterEvents(category) {
+            const eventCards = document.querySelectorAll('.event-card');
+            eventCards.forEach(card => {
+                if (category === 'all' || card.getAttribute('data-category') === category) {
+                    card.style.display = 'flex';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        }
+
+        function animateCards() {
+            gsap.from('.event-card', {
+                opacity: 0,
+                y: 50,
+                stagger: 0.1,
+                duration: 0.8,
+                ease: 'power3.out'
+            });
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            renderEvents();
+
+            const categoryButtons = document.querySelectorAll('.category-btn');
+            categoryButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    categoryButtons.forEach(btn => btn.classList.remove('active'));
+                    button.classList.add('active');
+                    filterEvents(button.getAttribute('data-category'));
+                });
+            });
+
+            window.addEventListener('scroll', () => {
+                const header = document.querySelector('header');
+                if (window.scrollY > 50) {
+                    header.classList.add('scrolled');
+                } else {
+                    header.classList.remove('scrolled');
+                }
+            });
+        });
+    </script>
+</body>
+</html>

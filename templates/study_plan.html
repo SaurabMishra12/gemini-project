@@ -1,0 +1,198 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2 class="text-center mb-4">Your Personalized Study Plan</h2>
+    <div class="card">
+        <div class="card-body">
+            <div class="study-plan-output" id="study-plan-output">
+                {{ study_plan | safe }}
+            </div>
+        </div>
+    </div>
+    <div class="text-center mt-4">
+        <button class="btn btn-primary" id="edit-btn">Edit Study Plan</button>
+        <button class="btn btn-success" id="save-btn">Save Study Plan</button>
+        <button class="btn btn-info" id="view-saved-btn">View Saved Plans</button>
+    </div>
+</div>
+
+<!-- Include MathJax for rendering mathematical expressions -->
+<script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+<!-- Include Marked.js for Markdown parsing -->
+<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+
+<!-- Custom CSS for styling -->
+<style>
+    .card {
+        border: none;
+        border-radius: 10px;
+        box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    }
+    .card-body {
+        padding: 30px;
+    }
+    .study-plan-output {
+        background-color: #f9f9f9;
+        border-radius: 10px;
+        padding: 20px;
+        font-family: 'Arial', sans-serif;
+        font-size: 16px;
+        line-height: 1.6;
+        color: #333;
+        overflow-x: auto;
+        white-space: pre-wrap;
+    }
+    .study-plan-output h2, .study-plan-output h3, .study-plan-output h4 {
+        margin-top: 1em;
+        margin-bottom: 0.5em;
+        font-weight: bold;
+        color: #0056b3;
+    }
+    .study-plan-output p {
+        margin-bottom: 1em;
+    }
+    .study-plan-output .highlight {
+        background-color: #ffd700;
+        font-weight: bold;
+        padding: 0 4px;
+        border-radius: 4px;
+    }
+    .study-plan-output .important {
+        color: #d63384;
+        font-weight: bold;
+    }
+    .study-plan-output ul {
+        padding-left: 20px;
+        list-style-type: disc;
+    }
+    .study-plan-output ul li {
+        margin-bottom: 0.5em;
+    }
+    .study-plan-output .schedule {
+        margin-top: 1em;
+        margin-bottom: 1em;
+        padding: 10px;
+        background-color: #e6e6e6;
+        border-radius: 10px;
+    }
+    .study-plan-output .time {
+        color: #007bff;
+        font-weight: bold;
+    }
+    .study-plan-output .section {
+        margin-top: 1em;
+        margin-bottom: 1em;
+        padding: 10px;
+        background-color: #f0f0f0;
+        border-left: 5px solid #007bff;
+    }
+    .study-plan-output pre {
+        background-color: rgba(0, 0, 0, 0.05);
+        padding: 1rem;
+        border-radius: 10px;
+        overflow-x: auto;
+    }
+    .study-plan-output code {
+        background-color: rgba(0, 0, 0, 0.05);
+        padding: 0.2rem 0.4rem;
+        border-radius: 5px;
+    }
+    .study-plan-output blockquote {
+        border-left: 4px solid #28a745;
+        padding-left: 1rem;
+        color: #a5d6a7;
+    }
+    h2 {
+        font-weight: 700;
+        color: #333;
+    }
+</style>
+
+<!-- Custom JavaScript for Markdown rendering and localStorage -->
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const studyPlanOutput = document.getElementById('study-plan-output');
+        const rawMarkdown = studyPlanOutput.innerText;
+        const renderedHTML = marked.parse(rawMarkdown);
+        studyPlanOutput.innerHTML = renderedHTML;
+
+        document.getElementById('edit-btn').addEventListener('click', function () {
+            const markdownText = prompt('Edit your study plan in Markdown:', rawMarkdown);
+            if (markdownText !== null) {
+                const renderedHTML = marked.parse(markdownText);
+                studyPlanOutput.innerHTML = renderedHTML;
+                const planKey = 'studyPlan_' + new Date().getTime();
+                localStorage.setItem(planKey, markdownText);
+            }
+        });
+
+        document.getElementById('save-btn').addEventListener('click', function () {
+            const markdownText = studyPlanOutput.innerText;
+            const planKey = 'studyPlan_' + new Date().getTime();
+            localStorage.setItem(planKey, markdownText);
+            alert('Study plan saved!');
+        });
+
+        document.getElementById('view-saved-btn').addEventListener('click', function () {
+            const savedPlans = Object.keys(localStorage).filter(key => key.startsWith('studyPlan_'));
+            if (savedPlans.length === 0) {
+                alert('No saved study plans found.');
+                return;
+            }
+
+            let savedPlansList = '<ul>';
+            savedPlans.forEach(key => {
+                const plan = localStorage.getItem(key);
+                savedPlansList += `
+                    <li>
+                        <a href="#" class="view-plan" data-key="${key}">View Plan</a>
+                        <button class="delete-plan btn btn-danger btn-sm" data-key="${key}">Delete</button>
+                    </li>
+                `;
+            });
+            savedPlansList += '</ul>';
+
+            const popup = window.open('', 'Saved Plans', 'width=600,height=400');
+            popup.document.write(`
+                <html>
+                <head>
+                    <title>Saved Plans</title>
+                    <style>
+                        body { font-family: Arial, sans-serif; padding: 20px; }
+                        ul { list-style-type: none; padding: 0; }
+                        li { margin-bottom: 10px; }
+                        .delete-plan { margin-left: 10px; }
+                    </style>
+                </head>
+                <body>
+                    <h2>Saved Plans</h2>
+                    ${savedPlansList}
+                    <script>
+                        document.querySelectorAll('.view-plan').forEach(function (element) {
+                            element.addEventListener('click', function (event) {
+                                event.preventDefault();
+                                const planKey = this.dataset.key;
+                                const plan = localStorage.getItem(planKey);
+                                const planWindow = window.open('', 'View Plan', 'width=600,height=400');
+                                planWindow.document.write('<pre>' + plan + '</pre>');
+                            });
+                        });
+                        document.querySelectorAll('.delete-plan').forEach(function (element) {
+                            element.addEventListener('click', function () {
+                                const planKey = this.dataset.key;
+                                localStorage.removeItem(planKey);
+                                alert('Study plan deleted!');
+                                window.location.reload();
+                            });
+                        });
+                    <\/script>
+                </body>
+                </html>
+            `);
+        });
+    });
+</script>
+{% endblock %}

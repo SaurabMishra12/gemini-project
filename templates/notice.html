@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Notice</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            width: 80%;
+            margin: 20px auto;
+        }
+        .notice-card {
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            padding: 20px;
+            margin-bottom: 20px;
+            position: relative;
+        }
+        .notice-card.opened {
+            border-left: 5px solid #28a745;
+        }
+        .notice-card .btn {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .notice-card .btn:disabled {
+            background-color: #007bff;
+            cursor: not-allowed;
+        }
+        .notice-card .btn:hover:not(:disabled) {
+            background-color: #0056b3;
+        }
+        .notice-card .status {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            font-size: 14px;
+            color: #28a745;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>Notices</h2>
+    <div id="notice-container">
+        <!-- Notices will be dynamically loaded here -->
+    </div>
+</div>
+
+<script>
+    // Example notices
+    const notices = [
+        { id: 1, title: 'System Maintenance', content: 'The system will undergo maintenance on Saturday from 10 PM to 12 AM.' },
+        { id: 2, title: 'New Feature Release', content: 'we are constantly rolling out new updates' },
+        { id: 3, title: 'Notice', content: 'this is just for testing the notice' }
+    ];
+
+    // Load notices from localStorage
+    function loadNotices() {
+        const noticeContainer = document.getElementById('notice-container');
+        const openedNotices = JSON.parse(localStorage.getItem('openedNotices')) || [];
+        noticeContainer.innerHTML = ''; // Clear existing notices
+        notices.forEach(notice => {
+            const noticeCard = document.createElement('div');
+            noticeCard.className = 'notice-card';
+            if (openedNotices.includes(notice.id)) {
+                noticeCard.classList.add('opened');
+            }
+            noticeCard.innerHTML = `
+                <h3>${notice.title}</h3>
+                <p>${notice.content}</p>
+                <button class="btn" onclick="openNotice(${notice.id})" ${openedNotices.includes(notice.id) ? 'disabled' : ''}>${openedNotices.includes(notice.id) ? 'Opened' : 'Open'}</button>
+                <span class="status">${openedNotices.includes(notice.id) ? 'Opened' : ''}</span>
+            `;
+            noticeContainer.appendChild(noticeCard);
+        });
+    }
+
+    // Open notice in a new window and mark it as opened
+    function openNotice(id) {
+        const notice = notices.find(n => n.id === id);
+        if (notice) {
+            const openedNotices = JSON.parse(localStorage.getItem('openedNotices')) || [];
+            if (!openedNotices.includes(id)) {
+                openedNotices.push(id);
+                localStorage.setItem('openedNotices', JSON.stringify(openedNotices));
+            }
+            const noticeWindow = window.open('', 'Notice', 'width=800,height=600');
+            noticeWindow.document.write(`
+                <html>
+                <head>
+                    <title>${notice.title}</title>
+                    <style>
+                        body { font-family: Arial, sans-serif; padding: 20px; }
+                        h1 { color: #007bff; }
+                        p { font-size: 16px; line-height: 1.5; }
+                    </style>
+                </head>
+                <body>
+                    <h1>${notice.title}</h1>
+                    <p>${notice.content}</p>
+                    <button onclick="window.close()">Close</button>
+                </body>
+                </html>
+            `);
+        }
+    }
+
+    // Initial load
+    loadNotices();
+</script>
+
+</body>
+</html>

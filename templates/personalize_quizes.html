@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Personalized Quizzes</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap');
+
+        :root {
+            --primary-color: #4a90e2;
+            --secondary-color: #f5f5f5;
+            --accent-color: #ff6b6b;
+            --text-color: #333;
+            --light-text-color: #777;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            line-height: 1.6;
+            color: var(--text-color);
+            background-color: var(--secondary-color);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        header {
+            background-color: var(--primary-color);
+            color: white;
+            text-align: center;
+            padding: 2rem 0;
+            margin-bottom: 2rem;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .subtitle {
+            font-size: 1.2rem;
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+        .quiz-creator {
+            background-color: white;
+            border-radius: 8px;
+            padding: 2rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            margin-bottom: 2rem;
+        }
+
+        .quiz-creator h2 {
+            margin-bottom: 1rem;
+            color: var(--primary-color);
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+        }
+
+        input[type="text"],
+        input[type="number"],
+        textarea {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 1rem;
+        }
+
+        textarea {
+            height: 150px;
+            resize: vertical;
+        }
+
+        .btn {
+            display: inline-block;
+            background-color: var(--primary-color);
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: background-color 0.3s ease;
+        }
+
+        .btn:hover {
+            background-color: #3a78c2;
+        }
+
+        #quiz-container {
+            background-color: white;
+            border-radius: 8px;
+            padding: 2rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            display: none;
+        }
+
+        #quiz-container h2 {
+            margin-bottom: 1rem;
+            color: var(--primary-color);
+        }
+
+        #question {
+            font-size: 1.2rem;
+            margin-bottom: 1rem;
+        }
+
+        #options {
+            display: grid;
+            gap: 1rem;
+        }
+
+        .option {
+            background-color: var(--secondary-color);
+            border: none;
+            padding: 1rem;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .option:hover {
+            background-color: #e0e0e0;
+        }
+
+        #timer {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: var(--accent-color);
+        }
+
+        #result {
+            margin-top: 1rem;
+            font-weight: 600;
+        }
+
+        .correct {
+            color: #4caf50;
+        }
+
+        .incorrect {
+            color: #f44336;
+        }
+
+        .share-buttons {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .share-button {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .share-button i {
+            margin-right: 0.5rem;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Personalized Quizzes</h1>
+        <p class="subtitle">Create and take your own interactive quizzes!</p>
+    </header>
+
+    <div class="container">
+        <div class="quiz-creator">
+            <h2>Create Your Quiz</h2>
+            <form id="quiz-form">
+                <div class="form-group">
+                    <label for="quiz-title">Quiz Title:</label>
+                    <input type="text" id="quiz-title" required>
+                </div>
+                <div id="question-container">
+                    <div class="form-group question-group">
+                        <label>Question:</label>
+                        <input type="text" class="question-input" required placeholder="Enter question">
+                        <label>Correct Answer:</label>
+                        <input type="text" class="correct-answer-input" required placeholder="Enter correct answer">
+                        <label>Wrong Answer 1:</label>
+                        <input type="text" class="wrong-answer-input" required placeholder="Enter wrong answer">
+                        <label>Wrong Answer 2:</label>
+                        <input type="text" class="wrong-answer-input" required placeholder="Enter wrong answer">
+                        <label>Wrong Answer 3:</label>
+                        <input type="text" class="wrong-answer-input" required placeholder="Enter wrong answer">
+                    </div>
+                </div>
+                <button type="button" id="add-question" class="btn">Add Another Question</button>
+                <div class="form-group">
+                    <label for="quiz-time">Time Limit (minutes):</label>
+                    <input type="number" id="quiz-time" min="1" required>
+                </div>
+                <div class="form-group">
+                    <label for="quiz-num-questions">Number of Questions to Answer:</label>
+                    <input type="number" id="quiz-num-questions" min="1" required>
+                </div>
+                <div class="form-group">
+                    <label for="positive-marks">Marks for Correct Answer:</label>
+                    <input type="number" id="positive-marks" min="0" required>
+                </div>
+                <div class="form-group">
+                    <label for="negative-marks">Negative Marks for Incorrect Answer:</label>
+                    <input type="number" id="negative-marks" min="0" required>
+                </div>
+                <button type="submit" class="btn">Create Quiz</button>
+            </form>
+        </div>
+
+        <div id="quiz-container">
+            <h2 id="quiz-title-display"></h2>
+            <div id="timer"></div>
+            <div id="question"></div>
+            <div id="options"></div>
+            <div id="result"></div>
+            <button id="next-btn" class="btn" style="display: none;">Next Question</button>
+            <button id="finish-btn" class="btn" style="display: none;">Finish Quiz</button>
+        </div>
+
+        <div id="share-container" style="display: none;">
+            <h2>Quiz Completed!</h2>
+            <p id="final-score"></p>
+            <div class="share-buttons">
+                <button class="share-button" onclick="shareViaLink()"><i class="fas fa-link"></i> Copy Link</button>
+                <button class="share-button" onclick="shareOnWhatsApp()"><i class="fab fa-whatsapp"></i> WhatsApp</button>
+                <button class="share-button" onclick="shareOnFacebook()"><i class="fab fa-facebook"></i> Facebook</button>
+                <button class="share-button" onclick="shareOnInstagram()"><i class="fab fa-instagram"></i> Instagram</button>
+            </div>
+            <button onclick="location.reload()" class="btn" style="margin-top: 1rem;">Start New Quiz</button>
+        </div>
+    </div>
+
+    <script>
+        let quizQuestions = [];
+        let currentQuestionIndex = 0;
+        let score = 0;
+        let timeLeft = 0;
+        let timerInterval;
+        let numQuestions = 0;
+        let positiveMarks = 0;
+        let negativeMarks = 0;
+
+        document.getElementById('add-question').addEventListener('click', () => {
+            const questionGroup = document.createElement('div');
+            questionGroup.className = 'form-group question-group';
+            questionGroup.innerHTML = `
+                <label>Question:</label>
+                <input type="text" class="question-input" required placeholder="Enter question">
+                <label>Correct Answer:</label>
+                <input type="text" class="correct-answer-input" required placeholder="Enter correct answer">
+                <label>Wrong Answer 1:</label>
+                <input type="text" class="wrong-answer-input" required placeholder="Enter wrong answer">
+                <label>Wrong Answer 2:</label>
+                <input type="text" class="wrong-answer-input" required placeholder="Enter wrong answer">
+                <label>Wrong Answer 3:</label>
+                <input type="text" class="wrong-answer-input" required placeholder="Enter wrong answer">
+            `;
+            document.getElementById('question-container').appendChild(questionGroup);
+        });
+
+        document.getElementById('quiz-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const title = document.getElementById('quiz-title').value;
+            const time = parseInt(document.getElementById('quiz-time').value);
+            numQuestions = parseInt(document.getElementById('quiz-num-questions').value);
+            positiveMarks = parseInt(document.getElementById('positive-marks').value);
+            negativeMarks = parseInt(document.getElementById('negative-marks').value);
+
+            quizQuestions = [];
+            document.querySelectorAll('.question-group').forEach(group => {
+                const question = group.querySelector('.question-input').value;
+                const correctAnswer = group.querySelector('.correct-answer-input').value;
+                const wrongAnswers = Array.from(group.querySelectorAll('.wrong-answer-input')).map(input => input.value);
+                quizQuestions.push({ question, answers: [correctAnswer, ...wrongAnswers], correctAnswer });
+            });
+
+            if (quizQuestions.length < numQuestions) {
+                alert('Not enough questions provided. Please add more questions or reduce the number of questions to answer.');
+                return;
+            }
+
+            shuffleArray(quizQuestions);
+            quizQuestions = quizQuestions.slice(0, numQuestions);
+
+            const quizId = title + quizQuestions.map(q => q.question).join('');
+            if (localStorage.getItem(quizId)) {
+                alert('You have already attempted this quiz.');
+                return;
+            }
+
+            localStorage.setItem(quizId, true);
+            document.getElementById('quiz-title-display').textContent = title;
+            timeLeft = time * 60;
+            startQuiz();
+        });
+
+        function startQuiz() {
+            document.getElementById('quiz-form').style.display = 'none';
+            document.getElementById('quiz-container').style.display = 'block';
+            displayQuestion();
+            startTimer();
+        }
+
+        function displayQuestion() {
+            const currentQuestion = quizQuestions[currentQuestionIndex];
+            document.getElementById('question').textContent = currentQuestion.question;
+            const optionsDiv = document.getElementById('options');
+            optionsDiv.innerHTML = '';
+
+            shuffleArray(currentQuestion.answers);
+
+            currentQuestion.answers.forEach(answer => {
+                const button = document.createElement('button');
+                button.classList.add('option');
+                button.textContent = answer;
+                button.addEventListener('click', () => selectAnswer(answer));
+                optionsDiv.appendChild(button);
+            });
+        }
+
+        function selectAnswer(selectedAnswer) {
+            const currentQuestion = quizQuestions[currentQuestionIndex];
+            const resultDiv = document.getElementById('result');
+            const options = document.querySelectorAll('.option');
+
+            options.forEach(option => option.disabled = true);
+
+            if (selectedAnswer === currentQuestion.correctAnswer) {
+                score += positiveMarks;
+                resultDiv.textContent = 'Correct!';
+                resultDiv.classList.remove('incorrect');
+                resultDiv.classList.add('correct');
+            } else {
+                score -= negativeMarks;
+                resultDiv.textContent = 'Incorrect!';
+                resultDiv.classList.remove('correct');
+                resultDiv.classList.add('incorrect');
+            }
+
+            if (currentQuestionIndex + 1 < quizQuestions.length) {
+                document.getElementById('next-btn').style.display = 'inline-block';
+            } else {
+                document.getElementById('finish-btn').style.display = 'inline-block';
+            }
+        }
+
+        document.getElementById('next-btn').addEventListener('click', function() {
+            currentQuestionIndex++;
+            displayQuestion();
+            this.style.display = 'none';
+            document.getElementById('result').textContent = '';
+        });
+
+        document.getElementById('finish-btn').addEventListener('click', function() {
+            clearInterval(timerInterval);
+            displayScore();
+        });
+
+        function startTimer() {
+            const timerDiv = document.getElementById('timer');
+            timerInterval = setInterval(() => {
+                timeLeft--;
+                const minutes = Math.floor(timeLeft / 60);
+                const seconds = timeLeft % 60;
+                timerDiv.textContent = `Time left: ${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
+
+                if (timeLeft <= 0) {
+                    clearInterval(timerInterval);
+                    displayScore();
+                }
+            }, 1000);
+        }
+
+        function displayScore() {
+            document.getElementById('quiz-container').style.display = 'none';
+            document.getElementById('share-container').style.display = 'block';
+            document.getElementById('final-score').textContent = `You scored ${score} out of ${quizQuestions.length * positiveMarks}!`;
+        }
+
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+        }
+
+        function shareViaLink() {
+            const quizData = { title: document.getElementById('quiz-title-display').textContent, questions: quizQuestions };
+            localStorage.setItem('sharedQuiz', JSON.stringify(quizData));
+            const link = `${window.location.href.split('#')[0]}#${localStorage.getItem('sharedQuiz')}`;
+            navigator.clipboard.writeText(link).then(() => {
+                alert('Link copied to clipboard!');
+            });
+        }
+
+        function shareOnWhatsApp() {
+            const link = `${window.location.href.split('#')[0]}#${localStorage.getItem('sharedQuiz')}`;
+            window.open(`https://wa.me/?text=${encodeURIComponent(link)}`, '_blank');
+        }
+
+        function shareOnFacebook() {
+            const link = `${window.location.href.split('#')[0]}#${localStorage.getItem('sharedQuiz')}`;
+            window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(link)}`, '_blank');
+        }
+
+        function shareOnInstagram() {
+            const link = `${window.location.href.split('#')[0]}#${localStorage.getItem('sharedQuiz')}`;
+            window.open(`https://www.instagram.com/?url=${encodeURIComponent(link)}`, '_blank');
+        }
+
+        window.onload = function() {
+            const hash = window.location.hash.substr(1);
+            if (hash) {
+                const sharedQuiz = JSON.parse(decodeURIComponent(hash));
+                if (sharedQuiz) {
+                    loadSharedQuiz(sharedQuiz);
+                }
+            }
+        };
+
+        function loadSharedQuiz(quizData) {
+            document.getElementById('quiz-title-display').textContent = quizData.title;
+            quizQuestions = quizData.questions;
+            numQuestions = quizQuestions.length;
+            document.getElementById('quiz-form').style.display = 'none';
+            document.getElementById('quiz-container').style.display = 'block';
+            timeLeft = numQuestions * 60; // Example: 1 minute per question
+            startQuiz();
+        }
+    </script>
+</body>
+</html>

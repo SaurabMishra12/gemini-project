@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Subject Quizzes</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap');
+
+        :root {
+            --primary-color: #3498db;
+            --secondary-color: #2ecc71;
+            --background-color: #ecf0f1;
+            --text-color: #34495e;
+            --header-color: #2980b9;
+            --hover-color: #27ae60;
+            --modal-bg: rgba(0, 0, 0, 0.8);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: var(--background-color);
+            color: var(--text-color);
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        header {
+            background-color: var(--primary-color);
+            color: white;
+            text-align: center;
+            padding: 30px 0;
+            margin-bottom: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            font-size: 3em;
+            margin-bottom: 10px;
+        }
+
+        .search-container {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 30px;
+        }
+
+        #search-input {
+            width: 50%;
+            padding: 15px;
+            font-size: 1.1em;
+            border: none;
+            border-radius: 5px 0 0 5px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        #search-button {
+            padding: 15px 25px;
+            background-color: var(--secondary-color);
+            color: white;
+            border: none;
+            border-radius: 0 5px 5px 0;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        #search-button:hover {
+            background-color: var(--hover-color);
+        }
+
+        .quiz-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+
+        .quiz-card {
+            background-color: white;
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .quiz-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        .quiz-card i {
+            font-size: 3em;
+            margin-bottom: 15px;
+            color: var(--primary-color);
+        }
+
+        .quiz-card h3 {
+            margin-bottom: 10px;
+        }
+
+        .start-quiz {
+            display: inline-block;
+            margin-top: 15px;
+            padding: 10px 20px;
+            background-color: var(--primary-color);
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+        }
+
+        .start-quiz:hover {
+            background-color: var(--header-color);
+        }
+
+        #quiz-modal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: var(--modal-bg);
+            overflow: auto;
+        }
+
+        .modal-content {
+            background-color: white;
+            margin: 10% auto;
+            padding: 20px;
+            border-radius: 10px;
+            width: 80%;
+            max-width: 600px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            animation: fadeIn 0.5s ease-in-out;
+        }
+
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .close:hover,
+        .close:focus {
+            color: #000;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        #question {
+            margin-bottom: 20px;
+            font-size: 1.2em;
+        }
+
+        .answer-btn {
+            display: block;
+            width: 100%;
+            padding: 15px;
+            margin-bottom: 10px;
+            background-color: #f1f1f1;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            font-size: 1.1em;
+        }
+
+        .answer-btn:hover {
+            background-color: #ddd;
+        }
+
+        #result {
+            margin-top: 20px;
+            font-weight: bold;
+            font-size: 1.2em;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .fade-in {
+            animation: fadeIn 0.5s ease-in;
+        }
+
+        .button {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: var(--primary-color);
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+            font-size: 1.1em;
+        }
+
+        .button:hover {
+            background-color: var(--header-color);
+        }
+
+        .fade-in-up {
+            animation: fadeInUp 0.5s ease-in-out;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Interactive Subject Quizzes</h1>
+        <p>Test your knowledge with our engaging quizzes!</p>
+    </header>
+
+    <div class="container">
+        <div class="search-container">
+            <input type="text" id="search-input" placeholder="Search for quizzes...">
+            <button id="search-button"><i class="fas fa-search"></i></button>
+        </div>
+
+        <div class="quiz-grid">
+            <div class="quiz-card fade-in">
+                <i class="fas fa-atom"></i>
+                <h3>Physics Quiz</h3>
+                <p>Test your understanding of fundamental physics concepts.</p>
+                <a href="#" class="start-quiz" data-subject="physics">Start Quiz</a>
+            </div>
+            <div class="quiz-card fade-in">
+                <i class="fas fa-flask"></i>
+                <h3>Chemistry Quiz</h3>
+                <p>Challenge yourself with questions on chemical reactions and elements.</p>
+                <a href="#" class="start-quiz" data-subject="chemistry">Start Quiz</a>
+            </div>
+            <div class="quiz-card fade-in">
+                <i class="fas fa-dna"></i>
+                <h3>Biology Quiz</h3>
+                <p>Explore the wonders of life through our biology questions.</p>
+                <a href="#" class="start-quiz" data-subject="biology">Start Quiz</a>
+            </div>
+            <div class="quiz-card fade-in">
+                <i class="fas fa-square-root-alt"></i>
+                <h3>Math Quiz</h3>
+                <p>Sharpen your mathematical skills with our challenging problems.</p>
+                <a href="#" class="start-quiz" data-subject="math">Start Quiz</a>
+            </div>
+        </div>
+
+
+    </div>
+     <div>
+            <a href="{{ url_for('personalize_quizzes') }}" class="button fade-in-up" style="animation-delay: 0.4s;">
+                <i class="fas fa-pencil-alt"></i>
+                Personalize Quiz
+            </a>
+        </div>
+
+    <div id="quiz-modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2 id="quiz-title"></h2>
+            <p id="question"></p>
+            <div id="answers"></div>
+            <p id="result"></p>
+        </div>
+    </div>
+
+    <script>
+        // Sample quiz data
+        const quizzes = {
+            physics: [
+                {
+                    question: "What is the SI unit of force?",
+                    answers: ["Newton", "Joule", "Watt", "Pascal"],
+                    correct: 0
+                },
+                {
+                    question: "Which of these is NOT a fundamental force of nature?",
+                    answers: ["Gravity", "Electromagnetism", "Strong Nuclear", "Friction"],
+                    correct: 3
+                }
+            ],
+            chemistry: [
+                {
+                    question: "What is the chemical symbol for gold?",
+                    answers: ["Au", "Ag", "Fe", "Cu"],
+                    correct: 0
+                },
+                {
+                    question: "Which of these is a noble gas?",
+                    answers: ["Oxygen", "Nitrogen", "Helium", "Hydrogen"],
+                    correct: 2
+                }
+            ],
+            biology: [
+                {
+                    question: "What is the powerhouse of the cell?",
+                    answers: ["Nucleus", "Mitochondria", "Endoplasmic Reticulum", "Golgi Apparatus"],
+                    correct: 1
+                },
+                {
+                    question: "Which of these is NOT a type of blood cell?",
+                    answers: ["Red Blood Cells", "White Blood Cells", "Platelets", "Stem Cells"],
+                    correct: 3
+                }
+            ],
+            math: [
+                {
+                    question: "What is the value of π (pi) to two decimal places?",
+                    answers: ["3.14", "3.16", "3.12", "3.18"],
+                    correct: 0
+                },
+                {
+                    question: "What is the square root of 144?",
+                    answers: ["10", "12", "14", "16"],
+                    correct: 1
+                }
+            ]
+        };
+
+        // Get DOM elements
+        const modal = document.getElementById("quiz-modal");
+        const quizTitle = document.getElementById("quiz-title");
+        const questionEl = document.getElementById("question");
+        const answersEl = document.getElementById("answers");
+        const resultEl = document.getElementById("result");
+        const closeBtn = document.getElementsByClassName("close")[0];
+        const searchInput = document.getElementById("search-input");
+        const searchButton = document.getElementById("search-button");
+
+        let currentQuiz = [];
+        let currentQuestion = 0;
+
+        // Event listeners
+        document.querySelectorAll('.start-quiz').forEach(button => {
+            button.addEventListener('click', (e) => {
+                e.preventDefault();
+                const subject = e.target.getAttribute('data-subject');
+                startQuiz(subject);
+            });
+        });
+
+        closeBtn.onclick = closeModal;
+        window.onclick = (event) => {
+            if (event.target == modal) {
+                closeModal();
+            }
+        };
+
+        searchButton.addEventListener('click', searchQuizzes);
+        searchInput.addEventListener('keyup', (e) => {
+            if (e.key === 'Enter') {
+                searchQuizzes();
+            }
+        });
+
+        function startQuiz(subject) {
+            currentQuiz = quizzes[subject];
+            currentQuestion = 0;
+            quizTitle.textContent = subject.charAt(0).toUpperCase() + subject.slice(1) + " Quiz";
+            showQuestion();
+            modal.style.display = "block";
+        }
+
+        function showQuestion() {
+            const question = currentQuiz[currentQuestion];
+            questionEl.textContent = question.question;
+            answersEl.innerHTML = "";
+            resultEl.textContent = "";
+
+            question.answers.forEach((answer, index) => {
+                const button = document.createElement("button");
+                button.textContent = answer;
+                button.classList.add("answer-btn");
+                button.addEventListener("click", () => checkAnswer(index));
+                answersEl.appendChild(button);
+            });
+        }
+
+        function checkAnswer(answerIndex) {
+            const question = currentQuiz[currentQuestion];
+            if (answerIndex === question.correct) {
+                resultEl.textContent = "Correct!";
+                resultEl.style.color = "green";
+            } else {
+                resultEl.textContent = "Incorrect. The correct answer is: " + question.answers[question.correct];
+                resultEl.style.color = "red";
+            }
+
+            currentQuestion++;
+            if (currentQuestion < currentQuiz.length) {
+                setTimeout(showQuestion, 2000);
+            } else {
+                setTimeout(() => {
+                    resultEl.textContent = "Quiz completed!";
+                    resultEl.style.color = "black";
+                }, 2000);
+            }
+        }
+
+        function closeModal() {
+            modal.style.display = "none";
+        }
+
+        function searchQuizzes() {
+            const searchTerm = searchInput.value.toLowerCase();
+            document.querySelectorAll('.quiz-card').forEach(card => {
+                const cardText = card.textContent.toLowerCase();
+                if (cardText.includes(searchTerm)) {
+                    card.style.display = 'block';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        }
+
+        // Add fade-in animation to quiz cards
+        document.addEventListener('DOMContentLoaded', () => {
+            const cards = document.querySelectorAll('.quiz-card');
+            cards.forEach((card, index) => {
+                setTimeout(() => {
+                    card.classList.add('fade-in');
+                }, index * 100);
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mental Health and Wellness</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body class="bg-gray-100 font-sans">
+    <header class="bg-blue-600 text-white p-4">
+        <div class="container mx-auto">
+            <h1 class="text-3xl font-bold">Mental Health and Wellness</h1>
+        </div>
+    </header>
+
+    <main class="container mx-auto mt-8 px-4">
+        <section class="mb-12">
+            <h2 class="text-2xl font-semibold mb-4">Prioritize Your Mental Health</h2>
+            <p class="text-gray-700">Welcome to our Mental Health and Wellness page. Here, you'll find resources and tools to help you manage stress, practice mindfulness, and improve your overall mental well-being.</p>
+        </section>
+
+        <section class="mb-12">
+            <h2 class="text-2xl font-semibold mb-4">Resources</h2>
+            <ul class="list-disc list-inside text-gray-700">
+                <li>Articles on mental health topics</li>
+                <li>Self-assessment tools</li>
+                <li>Community support forums</li>
+                <li>Professional help directories</li>
+            </ul>
+        </section>
+
+        <section class="mb-12">
+            <h2 class="text-2xl font-semibold mb-4">Guided Meditations</h2>
+            <div class="bg-white p-6 rounded-lg shadow-md">
+                <h3 class="text-xl font-semibold mb-2">Daily Calm</h3>
+                <p class="text-gray-700 mb-4">A 10-minute guided meditation to center your mind and relax your body.</p>
+                <a href="{{ url_for('meditation') }}" class="btn btn-success">
+                    <button class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded">
+                        Start Meditation
+                    </button>
+                </a>
+            </div>
+        </section>
+
+        <section class="mb-12">
+            <h2 class="text-2xl font-semibold mb-4">Stress Management Techniques</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="bg-white p-6 rounded-lg shadow-md">
+                    <h3 class="text-xl font-semibold mb-2">Deep Breathing</h3>
+                    <p class="text-gray-700">Learn how to use deep breathing to reduce stress and anxiety.</p>
+                </div>
+                <div class="bg-white p-6 rounded-lg shadow-md">
+                    <h3 class="text-xl font-semibold mb-2">Progressive Muscle Relaxation</h3>
+                    <p class="text-gray-700">A technique to help you relax by systematically tensing and relaxing muscle groups.</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="mb-12">
+            <h2 class="text-2xl font-semibold mb-4">Mood Tracker</h2>
+            <div id="mood-tracker-widget" class="bg-white p-6 rounded-lg shadow-md">
+                <form id="mood-form" class="mb-4">
+                    <label for="mood" class="block text-gray-700 mb-2">How are you feeling today?</label>
+                    <input type="number" id="mood" name="mood" min="0" max="10" placeholder="Enter mood score (0-10)" class="border border-gray-300 rounded p-2 w-full mb-4">
+                    <button type="submit" class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded">Submit</button>
+                </form>
+                <canvas id="mood-chart" width="4" height="1"></canvas>
+                <div id="mood-status" class="mt-4">
+                    <p class="text-gray-700" id="current-mood"></p>
+                    <p class="text-gray-700" id="advice"></p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="bg-gray-200 mt-12 py-6">
+        <div class="container mx-auto px-4 text-center text-gray-600">
+            <p></p>
+        </div>
+    </footer>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            const ctx = document.getElementById('mood-chart').getContext('2d');
+            const moodChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: [], // Dates will go here
+                    datasets: [{
+                        label: 'Mood',
+                        borderColor: 'rgba(75, 192, 192, 1)',
+                        backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                        data: [], // Mood scores will go here
+                    }]
+                },
+                options: {
+                    scales: {
+                        x: {
+                            title: {
+                                display: true,
+                                text: 'Date'
+                            }
+                        },
+                        y: {
+                            title: {
+                                display: true,
+                                text: 'Mood Score'
+                            },
+                            min: 0,
+                            max: 10
+                        }
+                    }
+                }
+            });
+
+            // Load saved mood data from local storage
+            const savedData = JSON.parse(localStorage.getItem('moodData')) || { labels: [], data: [] };
+            moodChart.data.labels = savedData.labels;
+            moodChart.data.datasets[0].data = savedData.data;
+            moodChart.update();
+
+            // Function to provide advice based on mood
+            function getAdvice(mood) {
+                if (mood <= 3) {
+                    return "It looks like you're feeling quite low. It might be helpful to reach out to a friend or therapist, or try a relaxing activity.";
+                } else if (mood <= 6) {
+                    return "You're in a moderate mood. Consider doing something you enjoy to boost your mood further.";
+                } else {
+                    return "Great job! You're feeling quite positive. Keep up the good work and continue with your healthy habits.";
+                }
+            }
+
+            $('#mood-form').on('submit', function(e) {
+                e.preventDefault();
+                const moodInput = parseInt($('#mood').val(), 10);
+                if (!isNaN(moodInput) && moodInput >= 0 && moodInput <= 10) {
+                    const currentDate = new Date().toLocaleDateString();
+                    moodChart.data.labels.push(currentDate);
+                    moodChart.data.datasets[0].data.push(moodInput);
+                    moodChart.update();
+
+                    // Save data to local storage
+                    const moodData = {
+                        labels: moodChart.data.labels,
+                        data: moodChart.data.datasets[0].data
+                    };
+                    localStorage.setItem('moodData', JSON.stringify(moodData));
+
+                    // Display today's mood and advice
+                    $('#current-mood').text(`Today's mood score: ${moodInput}`);
+                    $('#advice').text(getAdvice(moodInput));
+
+                    $('#mood').val(''); // Clear input field
+                } else {
+                    alert('Please enter a valid mood score between 0 and 10.');
+                }
+            });
+
+            // Display today's mood and advice on page load if available
+            const lastMood = savedData.data[savedData.data.length - 1];
+            if (lastMood !== undefined) {
+                $('#current-mood').text(`Today's mood score: ${lastMood}`);
+                $('#advice').text(getAdvice(lastMood));
+            }
+        });
+    </script>
+</body>
+</html>

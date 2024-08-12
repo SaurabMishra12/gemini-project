@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Important Dates - Step Mentor</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/alpinejs/3.10.5/cdn.min.js" defer></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
+</head>
+<body class="bg-gray-100 font-sans">
+    <div class="container mx-auto px-4 py-8" x-data="app()">
+        <header class="mb-8">
+            <h1 class="text-4xl font-bold text-center text-indigo-600">Step Mentor</h1>
+            <h2 class="text-2xl font-semibold text-center text-gray-700 mt-2">Important Dates</h2>
+        </header>
+
+        <main>
+            <div class="bg-white shadow-lg rounded-lg overflow-hidden mb-8">
+                <div class="p-6">
+                    <h3 class="text-xl font-semibold mb-4" x-text="editingDate.id ? 'Edit Date' : 'Add New Date'"></h3>
+                    <form @submit.prevent="saveDate">
+                        <div class="mb-4">
+                            <label for="title" class="block text-sm font-medium text-gray-700">Title</label>
+                            <input type="text" id="title" x-model="editingDate.title" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
+                        </div>
+                        <div class="mb-4">
+                            <label for="description" class="block text-sm font-medium text-gray-700">Description</label>
+                            <textarea id="description" x-model="editingDate.description" rows="3" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"></textarea>
+                        </div>
+                        <div class="mb-4">
+                            <label for="date" class="block text-sm font-medium text-gray-700">Date</label>
+                            <input type="date" id="date" x-model="editingDate.date" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
+                        </div>
+                        <div class="flex justify-end">
+                            <button type="submit" class="px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                                Save Date
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <div class="bg-white shadow-lg rounded-lg overflow-hidden">
+                <div class="p-6">
+                    <template x-if="dates.length === 0">
+                        <p class="text-gray-500 text-center">No important dates added yet.</p>
+                    </template>
+                    <template x-if="dates.length > 0">
+                        <ul class="space-y-4">
+                            <template x-for="date in sortedDates" :key="date.id">
+                                <li class="bg-gray-50 p-4 rounded-md shadow-sm transition duration-300 ease-in-out hover:shadow-md">
+                                    <div class="flex items-center justify-between">
+                                        <div>
+                                            <h3 class="text-lg font-semibold text-indigo-600" x-text="date.title"></h3>
+                                            <p class="text-gray-600 mt-1" x-text="date.description"></p>
+                                        </div>
+                                        <div class="text-right">
+                                            <p class="text-sm font-medium text-gray-500" x-text="moment(date.date).format('MMMM D, YYYY')"></p>
+                                            <p class="text-xs text-gray-400 mt-1" x-text="moment(date.date).fromNow()"></p>
+                                        </div>
+                                    </div>
+                                    <div class="mt-4">
+                                        <div class="bg-gray-200 h-2 rounded-full overflow-hidden">
+                                            <div class="bg-indigo-500 h-full rounded-full" :style="`width: ${calculateProgress(date.date)}%`"></div>
+                                        </div>
+                                    </div>
+                                    <div class="mt-4 flex justify-end space-x-2">
+                                        <button @click="editDate(date)" class="px-3 py-1 bg-yellow-500 text-white rounded-md hover:bg-yellow-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-yellow-500">
+                                            Edit
+                                        </button>
+                                        <button @click="deleteDate(date.id)" class="px-3 py-1 bg-red-500 text-white rounded-md hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500">
+                                            Delete
+                                        </button>
+                                    </div>
+                                </li>
+                            </template>
+                        </ul>
+                    </template>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        function app() {
+            return {
+                dates: [],
+                editingDate: { id: null, title: '', description: '', date: '' },
+                init() {
+                    this.loadDates();
+                },
+                loadDates() {
+                    const storedDates = localStorage.getItem('important-dates');
+                    this.dates = storedDates ? JSON.parse(storedDates) : [];
+                },
+                saveDates() {
+                    localStorage.setItem('important-dates', JSON.stringify(this.dates));
+                },
+                saveDate() {
+                    if (this.editingDate.id) {
+                        const index = this.dates.findIndex(d => d.id === this.editingDate.id);
+                        this.dates[index] = { ...this.editingDate };
+                    } else {
+                        this.editingDate.id = Date.now();
+                        this.dates.push({ ...this.editingDate });
+                    }
+                    this.saveDates();
+                    this.resetEditingDate();
+                },
+                editDate(date) {
+                    this.editingDate = { ...date };
+                },
+                deleteDate(id) {
+                    this.dates = this.dates.filter(d => d.id !== id);
+                    this.saveDates();
+                },
+                resetEditingDate() {
+                    this.editingDate = { id: null, title: '', description: '', date: '' };
+                },
+                calculateProgress(dateString) {
+                    const now = moment();
+                    const date = moment(dateString);
+                    const totalDays = date.diff(now.clone().subtract(30, 'days'), 'days');
+                    const daysLeft = date.diff(now, 'days');
+                    const progress = ((totalDays - daysLeft) / totalDays) * 100;
+                    return Math.max(0, Math.min(100, progress)).toFixed(2);
+                },
+                get sortedDates() {
+                    return [...this.dates].sort((a, b) => moment(a.date).diff(moment(b.date)));
+                }
+            };
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Performance Tracker</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.7.0/chart.min.js"></script>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f0f2f5;
+            color: #333;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        header {
+            background-color: #4a90e2;
+            color: white;
+            text-align: center;
+            padding: 1em;
+            margin-bottom: 2em;
+        }
+        h1, h2 {
+            margin-bottom: 20px;
+        }
+        .dashboard {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-bottom: 2em;
+        }
+        .card {
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            transition: transform 0.3s ease;
+        }
+        .card:hover {
+            transform: translateY(-5px);
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        .form-group input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        .chart-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+        .chart-card {
+            flex: 1 1 45%;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            margin-bottom: 2em;
+        }
+        .chart-card canvas {
+            max-width: 100%;
+            height: 400px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Performance Tracker</h1>
+    </header>
+    <div class="container">
+        <div class="dashboard">
+            <div class="card">
+                <h2>Daily Stats</h2>
+                <p>Time Spent: <span id="timeSpent">0</span> hours</p>
+                <p>Questions Solved: <span id="questionsSolved">0</span></p>
+                <p>To-Dos Completed: <span id="todosCompleted">0</span></p>
+            </div>
+            <div class="card">
+                <h2>Study Progress</h2>
+                <p>Hours Studied: <span id="hoursStudied">0</span></p>
+                <p>Test Marks: <span id="testMarks">0</span>%</p>
+                <p>Questions Without Help: <span id="questionsWithoutHelp">0</span></p>
+            </div>
+        </div>
+
+        <div class="chart-container">
+            <div class="chart-card">
+                <h2>Hours Studied</h2>
+                <canvas id="hoursStudiedChart"></canvas>
+            </div>
+            <div class="chart-card">
+                <h2>Questions Solved</h2>
+                <canvas id="questionsSolvedChart"></canvas>
+            </div>
+            <div class="chart-card">
+                <h2>Test Marks</h2>
+                <canvas id="testMarksChart"></canvas>
+            </div>
+        </div>
+
+        <div class="card">
+            <h2>Log Performance</h2>
+            <form id="performanceForm">
+                <div class="form-group">
+                    <label for="dailyTimeSpent">Daily Time Spent on App (hours)</label>
+                    <input type="number" id="dailyTimeSpent" name="dailyTimeSpent" min="0" step="0.1" required>
+                </div>
+                <div class="form-group">
+                    <label for="questionsSolved">Number of Questions Solved</label>
+                    <input type="number" id="questionsSolved" name="questionsSolved" min="0" required>
+                </div>
+                <div class="form-group">
+                    <label for="todosCompleted">Number of To-Dos Completed</label>
+                    <input type="number" id="todosCompleted" name="todosCompleted" min="0" required>
+                </div>
+                <div class="form-group">
+                    <label for="timeTableFollowed">Time Table Followed (Yes/No)</label>
+                    <input type="text" id="timeTableFollowed" name="timeTableFollowed" required>
+                </div>
+                <div class="form-group">
+                    <label for="hoursStudied">Number of Hours Studied</label>
+                    <input type="number" id="hoursStudied" name="hoursStudied" min="0" step="0.1" required>
+                </div>
+                <div class="form-group">
+                    <label for="testMarks">Test Marks</label>
+                    <input type="number" id="testMarks" name="testMarks" min="0" max="100" required>
+                </div>
+                <div class="form-group">
+                    <label for="questionsSolvedWithoutHelp">Questions Solved Without Help</label>
+                    <input type="number" id="questionsSolvedWithoutHelp" name="questionsSolvedWithoutHelp" min="0" required>
+                </div>
+                <button type="submit">Save Performance Data</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        let performanceData = JSON.parse(localStorage.getItem('performanceData')) || [];
+        let hoursStudiedChart, questionsSolvedChart, testMarksChart;
+
+        function updateDashboard(data) {
+            document.getElementById('timeSpent').textContent = data.dailyTimeSpent;
+            document.getElementById('questionsSolved').textContent = data.questionsSolved;
+            document.getElementById('todosCompleted').textContent = data.todosCompleted;
+            document.getElementById('hoursStudied').textContent = data.hoursStudied;
+            document.getElementById('testMarks').textContent = data.testMarks;
+            document.getElementById('questionsWithoutHelp').textContent = data.questionsSolvedWithoutHelp;
+        }
+
+        function updateCharts() {
+            const ctxHoursStudied = document.getElementById('hoursStudiedChart').getContext('2d');
+            const ctxQuestionsSolved = document.getElementById('questionsSolvedChart').getContext('2d');
+            const ctxTestMarks = document.getElementById('testMarksChart').getContext('2d');
+
+            if (hoursStudiedChart) hoursStudiedChart.destroy();
+            if (questionsSolvedChart) questionsSolvedChart.destroy();
+            if (testMarksChart) testMarksChart.destroy();
+
+            hoursStudiedChart = new Chart(ctxHoursStudied, {
+                type: 'line',
+                data: {
+                    labels: performanceData.map((_, index) => `Day ${index + 1}`),
+                    datasets: [{
+                        label: 'Hours Studied',
+                        data: performanceData.map(d => d.hoursStudied),
+                        borderColor: 'rgb(75, 192, 192)',
+                        tension: 0.1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+
+            questionsSolvedChart = new Chart(ctxQuestionsSolved, {
+                type: 'line',
+                data: {
+                    labels: performanceData.map((_, index) => `Day ${index + 1}`),
+                    datasets: [{
+                        label: 'Questions Solved',
+                        data: performanceData.map(d => d.questionsSolved),
+                        borderColor: 'rgb(255, 99, 132)',
+                        tension: 0.1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+
+            testMarksChart = new Chart(ctxTestMarks, {
+                type: 'line',
+                data: {
+                    labels: performanceData.map((_, index) => `Day ${index + 1}`),
+                    datasets: [{
+                        label: 'Test Marks',
+                        data: performanceData.map(d => d.testMarks),
+                        borderColor: 'rgb(54, 162, 235)',
+                        tension: 0.1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+        }
+
+        document.getElementById('performanceForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+            const formData = new FormData(this);
+            const data = Object.fromEntries(formData);
+
+            // Convert string values to numbers
+            for (let key in data) {
+                if (key !== 'timeTableFollowed') {
+                    data[key] = Number(data[key]);
+                }
+            }
+
+            performanceData.push(data);
+            localStorage.setItem('performanceData', JSON.stringify(performanceData));
+            updateDashboard(data);
+            updateCharts();
+
+            // Clear form fields
+            this.reset();
+
+            console.log('Performance data saved:', data);
+            alert('Performance data saved successfully!');
+        });
+
+        // Initialize charts and dashboard with stored data
+        if (performanceData.length > 0) {
+            updateDashboard(performanceData[performanceData.length - 1]);
+        }
+        updateCharts();
+    </script>
+</body>
+</html>

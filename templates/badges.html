@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Badge System</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            background: linear-gradient(135deg, #f5f7fa, #c3cfe2);
+            min-height: 100vh;
+        }
+        .container {
+            padding-top: 50px;
+            padding-bottom: 50px;
+        }
+        .card {
+            border: none;
+            border-radius: 15px;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+            transition: transform 0.3s;
+        }
+        .card:hover {
+            transform: translateY(-5px);
+        }
+        .badge-icon {
+            font-size: 3rem;
+            margin-bottom: 15px;
+        }
+        .badge-locked {
+            opacity: 0.5;
+            filter: grayscale(100%);
+        }
+        .progress {
+            height: 10px;
+            border-radius: 5px;
+        }
+        .share-buttons a {
+            color: #fff;
+            padding: 10px 15px;
+            border-radius: 5px;
+            text-decoration: none;
+            margin: 0 5px;
+            transition: background-color 0.3s;
+        }
+        .share-buttons a:hover {
+            opacity: 0.9;
+        }
+        .facebook { background-color: #3b5998; }
+        .twitter { background-color: #1da1f2; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 class="text-center mb-5">Your Badge Journey</h1>
+
+        <div class="row mb-5">
+            <div class="col-md-6 offset-md-3">
+                <div class="card">
+                    <div class="card-body text-center">
+                        <h2 class="card-title">Overall Progress</h2>
+                        <div class="progress mb-3">
+                            <div class="progress-bar bg-success" role="progressbar" style="width: 25%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">25%</div>
+                        </div>
+                        <p class="card-text">Keep going! You're making great progress.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <h2 class="text-center mb-4">Earned Badges</h2>
+        <div class="row mb-5">
+            <div class="col-md-4">
+                <div class="card h-100">
+                    <div class="card-body text-center">
+                        <i class="fas fa-calendar-check badge-icon text-warning"></i>
+                        <h3 class="card-title">Daily Visitor</h3>
+                        <p class="card-text">You've visited us every day this week!</p>
+                        <div class="share-buttons mt-3">
+                            <a href="#" class="facebook" onclick="shareBadge('facebook', 'Daily Visitor')"><i class="fab fa-facebook-f"></i> Share</a>
+                            <a href="#" class="twitter" onclick="shareBadge('twitter', 'Daily Visitor')"><i class="fab fa-twitter"></i> Tweet</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <h2 class="text-center mb-4">Badges to Unlock</h2>
+        <div class="row">
+            <div class="col-md-4 mb-4">
+                <div class="card h-100 badge-locked">
+                    <div class="card-body text-center">
+                        <i class="fas fa-puzzle-piece badge-icon text-primary"></i>
+                        <h3 class="card-title">Solver</h3>
+                        <p class="card-text">Solve 10 problems to unlock</p>
+                        <div class="progress mt-3">
+                            <div class="progress-bar bg-primary" role="progressbar" style="width: 30%;" aria-valuenow="30" aria-valuemin="0" aria-valuemax="100">3/10</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 mb-4">
+                <div class="card h-100 badge-locked">
+                    <div class="card-body text-center">
+                        <i class="fas fa-fire badge-icon text-danger"></i>
+                        <h3 class="card-title">Grinder</h3>
+                        <p class="card-text">Complete a 7-day streak</p>
+                        <div class="progress mt-3">
+                            <div class="progress-bar bg-danger" role="progressbar" style="width: 42%;" aria-valuenow="42" aria-valuemin="0" aria-valuemax="100">3/7 days</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 mb-4">
+                <div class="card h-100 badge-locked">
+                    <div class="card-body text-center">
+                        <i class="fas fa-star badge-icon text-success"></i>
+                        <h3 class="card-title">All-Star</h3>
+                        <p class="card-text">Achieve a perfect score on 5 tests</p>
+                        <div class="progress mt-3">
+                            <div class="progress-bar bg-success" role="progressbar" style="width: 20%;" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100">1/5</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        function shareBadge(platform, badgeName) {
+            let url = '';
+            let text = `I just earned the ${badgeName} badge! Check out my progress!`;
+            if (platform === 'facebook') {
+                url = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(window.location.href)}&quote=${encodeURIComponent(text)}`;
+            } else if (platform === 'twitter') {
+                url = `https://twitter.com/intent/tweet?url=${encodeURIComponent(window.location.href)}&text=${encodeURIComponent(text)}`;
+            }
+            window.open(url, '_blank');
+        }
+
+        // Simulating badge unlock animation
+        document.querySelectorAll('.badge-locked').forEach(badge => {
+            badge.addEventListener('click', function() {
+                this.classList.remove('badge-locked');
+                this.querySelector('.progress-bar').style.width = '100%';
+                this.querySelector('.progress-bar').textContent = 'Unlocked!';
+            });
+        });
+    </script>
+</body>
+</html>

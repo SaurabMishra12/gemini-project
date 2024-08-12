@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chemistry Syllabus Tracker</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: #ffffff;
+            color: #333;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        .container {
+            width: 90%;
+            height: 90vh;
+            background: #ffffff;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+            overflow-y: auto;
+        }
+
+        h1, h2 {
+            color: #333;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .topic-list, .progress-tracking {
+            margin-bottom: 40px;
+        }
+
+        .topic-input {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+
+        .topic-input input {
+            padding: 12px;
+            width: 60%;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            margin-right: 10px;
+            background: #f9f9f9;
+            color: #333;
+        }
+
+        .topic-input button {
+            padding: 12px 20px;
+            background: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background 0.3s ease, transform 0.2s;
+            font-size: 16px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .topic-input button:hover {
+            background: #0056b3;
+            transform: scale(1.05);
+        }
+
+        #topics {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        #topics li {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin: 10px 0;
+            padding: 12px;
+            background: #f1f1f1;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            transition: background 0.3s ease, transform 0.2s;
+        }
+
+        #topics li:hover {
+            background: #e7e7e7;
+            transform: scale(1.02);
+        }
+
+        #topics li input[type="text"] {
+            flex: 2;
+            margin-right: 10px;
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            background: #fff;
+            color: #333;
+        }
+
+        #topics li select, #topics li input[type="datetime-local"], #topics li button {
+            margin-left: 10px;
+            background: #f1f1f1;
+            color: #333;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            padding: 8px;
+        }
+
+        #topics li button {
+            background: #e74c3c;
+            color: #fff;
+            cursor: pointer;
+            transition: background 0.3s ease, transform 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        #topics li button:hover {
+            background: #c0392b;
+            transform: scale(1.05);
+        }
+
+        #progress-container {
+            width: 100%;
+            background-color: #444;
+            border-radius: 8px;
+            overflow: hidden;
+            height: 30px;
+            position: relative;
+        }
+
+        #progress-bar {
+            width: 0;
+            height: 100%;
+            background-color: #4caf50;
+            transition: width 0.5s;
+        }
+
+        #progress-percentage {
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-weight: bold;
+            color: #cfd2d6;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Chemistry Syllabus Tracker</h1>
+
+        <div class="topic-list">
+            <h2>Topic List</h2>
+            <div class="topic-input">
+                <input type="text" id="new-topic" placeholder="Enter new topic">
+                <button onclick="addTopic()"><i class="fas fa-plus"></i>Add Topic</button>
+            </div>
+            <ul id="topics">
+                <!-- Topics will be dynamically added here -->
+            </ul>
+        </div>
+
+        <div class="progress-tracking">
+            <h2>Progress Tracking</h2>
+            <div id="progress-container">
+                <div id="progress-bar"></div>
+                <span id="progress-percentage">0%</span>
+            </div>
+        </div>
+    </div>
+    <script>
+        const initialTopics = [
+            "Chemical bonding and Molecular Structure",
+            "Chemical thermodynamics",
+            "Chemical Kinetics",
+            "Electrochemistry",
+            "Equilibrium",
+            "Redox reactions",
+            "Atomic structure",
+            "Hydrogen",
+            "States of matter",
+            "Aromatic hydrocarbons",
+            "Classification of elements and Periodicity",
+            "Coordination compounds",
+            "Elements of the periodic table",
+            "Solutions",
+            "Some basic concepts of Chemistry",
+            "Surface chemistry",
+            "Chemical reactions",
+            "D and f block elements",
+            "Metallurgy",
+            "Organic Chemistry",
+            "P-block elements",
+            "Organic compounds containing halogens"
+        ];
+
+        document.addEventListener('DOMContentLoaded', function() {
+            loadTopics();
+            if (!localStorage.getItem('chemistryTopics')) {
+                initialTopics.forEach(topic => addTopic(topic, false));
+            }
+        });
+
+        function saveTopics() {
+            const topics = [];
+            document.querySelectorAll('#topics li').forEach(topic => {
+                const topicName = topic.querySelector('input[type="text"]').value;
+                const status = topic.querySelector('select').value;
+                const deadline = topic.querySelector('input[type="datetime-local"]').value;
+                topics.push({ topicName, status, deadline });
+            });
+            localStorage.setItem('chemistryTopics', JSON.stringify(topics));
+            updateProgress();
+        }
+
+        function loadTopics() {
+            const topics = JSON.parse(localStorage.getItem('chemistryTopics')) || [];
+            topics.forEach(topic => addTopic(topic.topicName, true, topic.status, topic.deadline));
+        }
+
+        function addTopic(topicName = '', save = true, status = 'Beginner', deadline = '') {
+            if (!topicName) {
+                topicName = document.getElementById('new-topic').value.trim();
+                if (topicName === '' || isDuplicateTopic(topicName)) {
+                    alert('Please enter a unique topic name.');
+                    return;
+                }
+            }
+
+            const topicList = document.getElementById('topics');
+            const newTopic = document.createElement('li');
+            newTopic.innerHTML = `
+                <input type="text" placeholder="Topic Name" value="${topicName}">
+                <select onchange="updateProgress()">
+                    <option value="Beginner" ${status === 'Beginner' ? 'selected' : ''}>Beginner</option>
+                    <option value="Practice" ${status === 'Practice' ? 'selected' : ''}>Practice</option>
+                    <option value="Revision" ${status === 'Revision' ? 'selected' : ''}>Revision</option>
+                    <option value="Completed" ${status === 'Completed' ? 'selected' : ''}>Completed</option>
+                </select>
+                <input type="datetime-local" value="${deadline}">
+                <button onclick="removeTopic(this)"><i class="fas fa-trash"></i>Remove</button>
+            `;
+            topicList.appendChild(newTopic);
+            document.getElementById('new-topic').value = '';
+            if (save) saveTopics();
+        }
+
+        function isDuplicateTopic(topicName) {
+            const topics = document.querySelectorAll('#topics li input[type="text"]');
+            return Array.from(topics).some(topic => topic.value.trim().toLowerCase() === topicName.toLowerCase());
+        }
+
+        function removeTopic(button) {
+            const topic = button.parentElement;
+            topic.remove();
+            saveTopics();
+        }
+
+        function updateProgress() {
+            const topics = document.querySelectorAll('#topics li');
+            const completedTopics = Array.from(topics).filter(topic => topic.querySelector('select').value === 'Completed');
+            const progress = (completedTopics.length / topics.length) * 100 || 0;
+
+            const progressBar = document.getElementById('progress-bar');
+            const progressPercentage = document.getElementById('progress-percentage');
+
+            progressBar.style.width = progress + '%';
+            progressPercentage.textContent = progress.toFixed(2) + '%';
+        }
+
+        document.addEventListener('input', saveTopics);
+    </script>
+</body>
+</html>

@@ -1,0 +1,389 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Step Mentor - Your AI Tutor</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
+    <style>
+        :root {
+            --primary-color: #4a90e2;
+            --secondary-color: #f39c12;
+            --background-color: #f8f9fa;
+            --text-color: #333;
+            --card-bg-color: #ffffff;
+        }
+
+        body {
+            background-color: var(--background-color);
+            color: var(--text-color);
+            font-family: 'Roboto', sans-serif;
+        }
+
+        .hero-section {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            padding: 4rem 2rem;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .hero-section:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2);
+        }
+
+        .card-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .card {
+            border: none;
+            border-radius: 15px;
+            transition: all 0.3s ease;
+            overflow: hidden;
+            background: var(--card-bg-color);
+        }
+
+        .card:hover {
+            transform: translateY(-5px) scale(1.03);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .card-body {
+            padding: 1.5rem;
+        }
+
+        .card-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: var(--primary-color);
+        }
+
+        .card-text {
+            font-size: 0.9rem;
+            color: #6c757d;
+        }
+
+        .btn {
+            border-radius: 50px;
+            padding: 0.5rem 1.5rem;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            transition: all 0.3s ease;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .quote-widget {
+            background-color: var(--card-bg-color);
+            border-left: 5px solid var(--primary-color);
+            transition: all 0.3s ease;
+        }
+
+        .quote-widget:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .quote-text {
+            font-size: 1.1rem;
+            font-style: italic;
+        }
+
+        .daily-streak {
+            background-color: var(--card-bg-color);
+            border-radius: 15px;
+            padding: 1.5rem;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        #theme-toggle {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1000;
+        }
+
+        .dark-mode {
+            --background-color: #232325;
+            --text-color: #ecf0f1;
+            --card-bg-color: #34495e;
+        }
+
+        .mt-5 {
+            margin-top: 3rem !important;
+        }
+    </style>
+</head>
+<body>
+    <button id="theme-toggle" class="btn btn-outline-primary"><i class="fas fa-moon"></i></button>
+
+    <div class="container-fluid">
+        <div class="row justify-content-center">
+            <div class="col-12 col-lg-10">
+                <div class="hero-section text-center my-5" data-aos="fade-down">
+                    <h1 class="display-4 fw-bold" id="welcomeText">Welcome, {{ username }}</h1>
+                    <h2 class="display-5 mb-4">Step Mentor, your AI tutor!</h2>
+                    <h3>Unlock Your Full Potential with AI 🚀</h3>
+                </div>
+
+                <div class="card-grid">
+                    <!-- Existing cards -->
+                    <div class="col">
+                        <div class="card h-100 rounded shadow-lg p-4">
+                            <div class="card-body">
+                                <h5 class="card-title"><i class="fas fa-question-circle fa-3x me-2"></i>Ask Questions</h5>
+                                <p class="card-text">Get help with any subject questions instantly.</p>
+                                <a href="{{ url_for('ask_questions') }}" class="btn btn-primary">Ask Now</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="card h-100 rounded shadow-lg p-4">
+                            <div class="card-body">
+                                <h5 class="card-title"><i class="fas fa-calendar-alt fa-3x me-2"></i>Previous Year Questions</h5>
+                                <p class="card-text">Access and practice previous year's questions.</p>
+                                <a href="{{ url_for('select_year') }}" class="btn btn-info">Explore</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="card h-100 rounded shadow-lg p-4">
+                            <div class="card-body">
+                                <h5 class="card-title"><i class="fas fa-lightbulb fa-3x me-2"></i>AI-based Study Plan</h5>
+                                <p class="card-text">Create personalized study plans with AI assistance.</p>
+                                <a href="{{ url_for('personalized_study_plan') }}" class="btn btn-success">Get Started</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="card h-100 rounded shadow-lg p-4">
+                            <div class="card-body">
+                                <h5 class="card-title"><i class="fas fa-book-open fa-3x me-2"></i>Reference Books</h5>
+                                <p class="card-text">Browse recommended reference books for JEE.</p>
+                                <a href="{{ url_for('reference_book') }}" class="btn btn-success">Get Started</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="card h-100 rounded shadow-lg p-4">
+                            <div class="card-body">
+                                <h5 class="card-title"><i class="fas fa-calculator fa-3x me-2"></i>Formula Sheet</h5>
+                                <p class="card-text">Access important formulas for JEE subjects.</p>
+                                <a href="{{ url_for('formula_sheet') }}" class="btn btn-warning">View Formulas</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="card h-100 rounded shadow-lg p-4">
+                            <div class="card-body">
+                                <h5 class="card-title"><i class="fas fa-pen fa-3x me-2"></i>Practice Tests</h5>
+                                <p class="card-text">Take practice tests to assess your preparation.</p>
+                                <a href="{{ url_for('index') }}" class="btn btn-primary">Start Test</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="card h-100 rounded shadow-lg p-4">
+                            <div class="card-body">
+                                <h5 class="card-title"><i class="fas fa-chart-line fa-3x me-2"></i>Performance Analytics</h5>
+                                <p class="card-text">Track your performance and identify areas for improvement.</p>
+                                <a href="performance_tracker" class="btn btn-info">View Analytics</a>
+                            </div>
+                        </div>
+                    </div>
+
+                            <div class="col">
+                        <div class="card h-100 rounded shadow-lg p-4">
+                            <div class="card-body">
+                                <h5 class="card-title"><i class="fas fa-user-friends fa-3x me-2"></i>Peer Study Groups</h5>
+                                <p class="card-text">Join or create study groups with your peers.</p>
+                                <a href="peerstudygroup" class="btn btn-success">Join Now</a>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- New Widgets -->
+                    <div class="col">
+                        <div class="card h-100 rounded shadow-lg p-4">
+                            <div class="card-body">
+                                <h5 class="card-title"><i class="fas fa-list-alt fa-3x me-2"></i>Today's Goals</h5>
+                                <p class="card-text">Set and track your daily study goals.</p>
+                                <a href="{{ url_for('todo') }}" class="btn btn-success">Set Goals</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="card h-100 rounded shadow-lg p-4">
+                            <div class="card-body">
+                                <h5 class="card-title"><i class="fas fa-calendar-day fa-3x me-2"></i>Important Dates</h5>
+                                <p class="card-text">Stay updated with important exam dates.</p>
+                                <a href="important-dates" class="btn btn-success">View Now</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="card h-100 rounded shadow-lg p-4">
+                            <div class="card-body">
+                                <h5 class="card-title"><i class="fas fa-quote-left fa-3x me-2"></i>Motivational Videos</h5>
+                                <p class="card-text">Get inspired with daily motivational Videos.</p>
+                                <a href="{{ url_for('motivational_videos') }}" class="btn btn-success">Do It</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="card h-100 rounded shadow-lg p-4">
+                            <div class="card-body">
+                                <h5 class="card-title"><i class="fas fa-puzzle-piece fa-3x me-2"></i>Career Counselling</h5>
+                                <p class="card-text">Get AI-Personalized Counselling</p>
+                                <a href="#" class="btn btn-success">Get Help</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col">
+    <div class="card h-100 rounded shadow-lg p-4">
+        <div class="card-body">
+            <h5 class="card-title"><i class="fas fa-bell fa-3x me-2"></i>Notice</h5>
+            <p class="card-text">Keep Yourself Updated</p>
+            <a href="{{ url_for('notice') }}" class="btn btn-success">See Me</a>
+        </div>
+    </div>
+</div>
+
+
+
+                    <div class="col">
+    <div class="card h-100 rounded shadow-lg p-4">
+        <div class="card-body">
+            <h5 class="card-title"><i class="fas fa-clipboard-list fa-3x me-2"></i>Syllabus Tracker</h5>
+            <p class="card-text">Track Your Success</p>
+            <a href="{{ url_for('syllabus_tracker') }}" class="btn btn-success">Track it</a>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+                    <div class="col">
+                        <div class="card h-100 rounded shadow-lg p-4">
+                            <div class="card-body">
+                                <h5 class="card-title"><i class="fas fa-user-friends fa-3x me-2"></i>Student Community</h5>
+                                <p class="card-text">Connect with fellow JEE aspirants for discussions and support.</p>
+                                <a href="student_community" class="btn btn-success">Join Now</a>
+                            </div>
+                        </div>
+                    </div>
+
+
+                       <div class="col">
+    <div class="card h-100 rounded shadow-lg p-4">
+        <div class="card-body">
+            <h5 class="card-title"><i class="fas fa-star fa-3x me-2"></i>More Features</h5>
+            <p class="card-text">Access More Features</p>
+            <a href="{{ url_for('more_features') }}" class="btn btn-success">Explore</a>
+        </div>
+    </div>
+</div>
+
+             </div>
+
+
+                 <div class="mt-5">
+                    <div class="mt-5">
+                        <div class="quote-widget p-4 rounded shadow-lg" data-aos="fade-right">
+                            <h4 class="mt-3">Quote of the Day</h4>
+                            <p id="quoteText" class="quote-text mb-4">"Loading quote..."</p>
+                            <button class="btn btn-primary" id="newQuoteBtn">Get New Quote</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mt-5">
+                    <h2 class="display-6 text-center"  data-aos="fade-up">Explore to the Byte-sized Universe </h2>
+                    <div class="daily-streak mt-3">
+                        <p class="lead">Embark on an extraordinary journey with Step Mentor, your ultimate ally in conquering competitive exams. Our cutting-edge features blends advanced AI with innovative features to deliver personalized practice, real-time insights, and powerful tools designed for your success. Transform your study experience into a dynamic adventure with Step Mentor!</p>
+                        <div id="streak-count" class="text-center my-4">
+                            <h1 class="display-4 fw-bold"></h1>
+                            <p class="lead"></p>
+                        </div>
+                    </div>
+                </div>
+
+
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
+    <script>
+        AOS.init();
+
+        const themeToggle = document.getElementById('theme-toggle');
+        const body = document.body;
+        const currentTheme = localStorage.getItem('theme');
+
+        if (currentTheme) {
+            body.classList.add(currentTheme);
+
+            if (currentTheme === 'dark-mode') {
+                themeToggle.innerHTML = '<i class="fas fa-sun"></i>';
+            }
+        }fetchQuote();
+
+            const newQuoteBtn = document.getElementById('newQuoteBtn');
+            newQuoteBtn.addEventListener('click', fetchQuote);
+
+        themeToggle.addEventListener('click', () => {
+            body.classList.toggle('dark-mode');
+
+            let theme = 'light-mode';
+            if (body.classList.contains('dark-mode')) {
+                theme = 'dark-mode';
+                themeToggle.innerHTML = '<i class="fas fa-sun"></i>';
+            } else {
+                themeToggle.innerHTML = '<i class="fas fa-moon"></i>';
+            }
+            localStorage.setItem('theme', theme);
+        });
+            async function fetchQuote() {
+            try {
+                const quoteText = document.getElementById('quoteText');
+                quoteText.style.opacity = 0;
+
+                const response = await fetch('https://api.quotable.io/random');
+                const data = await response.json();
+
+                setTimeout(() => {
+                    quoteText.innerText = `"${data.content}" - ${data.author}`;
+                    quoteText.style.opacity = 1;
+                }, 500);
+            } catch (error) {
+                console.error('Error fetching quote:', error);
+                document.getElementById('quoteText').innerText = 'Failed to load quote. Please try again.';
+            }
+        }
+
+    </script>
+</body>
+</html>
+
+{% endblock %}

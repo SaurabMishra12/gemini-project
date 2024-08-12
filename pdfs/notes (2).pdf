@@ -1,0 +1,733 @@
+%PDF-1.3
+%ºß¬à
+3 0 obj
+<</Type /Page
+/Parent 1 0 R
+/Resources 2 0 R
+/MediaBox [0 0 595.2799999999999727 841.8899999999999864]
+/Contents 4 0 R
+>>
+endobj
+4 0 obj
+<<
+/Length 4059
+>>
+stream
+0.200025 w
+0 G
+BT
+/F1 32 Tf
+36.7999999999999972 TL
+0 g
+211.0799999999999841 801.8899999999999864 Td
+(Step Mentor) Tj
+ET
+BT
+/F1 12 Tf
+13.7999999999999989 TL
+0. 0. 1. rg
+40. 761.8899999999999864 Td
+(Notes:) Tj
+ET
+BT
+/F1 12 Tf
+13.7999999999999989 TL
+0. g
+40. 741.8899999999999864 Td
+(probability ml notes) Tj
+ET
+BT
+/F1 12 Tf
+13.7999999999999989 TL
+0. 0. 1. rg
+40. 701.8899999999999864 Td
+(Generated Response:) Tj
+ET
+BT
+/F1 12 Tf
+13.7999999999999989 TL
+0. g
+40. 681.8899999999999864 Td
+(Probability in Machine Learning Notes) Tj
+ET
+BT
+/F1 12 Tf
+13.7999999999999989 TL
+0. g
+40. 661.8899999999999864 Td
+(1. Introduction:) Tj
+ET
+BT
+/F1 12 Tf
+13.7999999999999989 TL
+0. g
+40. 621.8899999999999864 Td
+(Probability is a fundamental concept in Machine Learning, providing the framework for) Tj
+ET
+BT
+/F1 12 Tf
+13.7999999999999989 TL
+0. g
+40. 601.8899999999999864 Td
+(understanding and quantifying uncertainty in data and predictions.) Tj
+ET
+BT
+/F1 12 Tf
+13.7999999999999989 TL
+0. g
+40. 581.8899999999999864 Td
+(It allows us to build models that can predict future events, make decisions under uncertainty, and) Tj
+ET
+BT
+/F1 12 Tf
+13.7999999999999989 TL
+0. g
+40. 561.8899999999999864 Td
+(estimate the reliability of our predictions.) Tj
+ET
+BT
+/F1 12 Tf
+13.7999999999999989 TL
+0. g
+40. 521.8899999999999864 Td
+(2. Basic Probability Concepts:) Tj
+ET
+BT
+/F1 12 Tf
+13.7999999999999989 TL
+0. g
+40. 481.8899999999999864 Td
+(Event: A specific outcome of an experiment or observation.) Tj
+ET
+BT
+/F1 12 Tf
+13.7999999999999989 TL
+0. g
+40. 461.8899999999999864 Td
+(Sample Space: The set of all possible outcomes of an experiment.) Tj
+ET
+BT
+/F1 12 Tf
+13.7999999999999989 TL
+0. g
+40. 441.8899999999999864 Td
+(Probability of an event \(P\(A\)\): The likelihood of an event occurring, expressed as a number) Tj
+ET
+BT
+/F1 12 Tf
+13.7999999999999989 TL
+0. g
+40. 421.8899999999999864 Td
+(between 0 \(impossible\) and 1 \(certain\).) Tj
+ET
+BT
+/F1 12 Tf
+13.7999999999999989 TL
+0. g
+40. 401.8899999999999864 Td
+(Conditional probability \(P\(A|B\)\): The probability of event A occurring given that event B has) Tj
+ET
+BT
+/F1 12 Tf
+13.7999999999999989 TL
+0. g
+40. 381.8899999999999864 Td
+(already occurred.) Tj
+ET
+BT
+/F1 12 Tf
+13.7999999999999989 TL
+0. g
+40. 361.8899999999999864 Td
+(Bayes' Theorem:  A fundamental rule that relates the conditional probability of two events to their) Tj
+ET
+BT
+/F1 12 Tf
+13.7999999999999989 TL
+0. g
+40. 341.8899999999999864 Td
+(prior probabilities and likelihoods. It is used extensively in Machine Learning, particularly in) Tj
+ET
+BT
+/F1 12 Tf
+13.7999999999999989 TL
+0. g
+40. 321.8899999999999864 Td
+(Bayesian inference.) Tj
+ET
+BT
+/F1 12 Tf
+13.7999999999999989 TL
+0. g
+40. 301.8899999999999864 Td
+(Independent events: Two events are independent if the occurrence of one does not affect the) Tj
+ET
+BT
+/F1 12 Tf
+13.7999999999999989 TL
+0. g
+40. 281.8899999999999864 Td
+(probability of the other.) Tj
+ET
+BT
+/F1 12 Tf
+13.7999999999999989 TL
+0. g
+40. 241.8899999999999864 Td
+(3. Probability Distributions:) Tj
+ET
+BT
+/F1 12 Tf
+13.7999999999999989 TL
+0. g
+40. 201.8899999999999864 Td
+(Probability Distribution: A function that describes the probability of each possible outcome of a) Tj
+ET
+BT
+/F1 12 Tf
+13.7999999999999989 TL
+0. g
+40. 181.8899999999999864 Td
+(random variable.) Tj
+ET
+BT
+/F1 12 Tf
+13.7999999999999989 TL
+0. g
+40. 161.8899999999999864 Td
+(Discrete Probability Distribution: Applicable to random variables that can only take on a finite) Tj
+ET
+BT
+/F1 12 Tf
+13.7999999999999989 TL
+0. g
+40. 141.8899999999999864 Td
+(number of values or a countably infinite number of values \(e.g., Bernoulli, Binomial, Poisson\).) Tj
+ET
+BT
+/F1 12 Tf
+13.7999999999999989 TL
+0. g
+40. 121.8899999999999864 Td
+(Continuous Probability Distribution: Applicable to random variables that can take on any value) Tj
+ET
+BT
+/F1 12 Tf
+13.7999999999999989 TL
+0. g
+40. 101.8899999999999864 Td
+(within a given range \(e.g., Normal, Exponential, Uniform\).) Tj
+ET
+BT
+/F1 12 Tf
+13.7999999999999989 TL
+0. g
+40. 61.8899999999999864 Td
+(4. Applications of Probability in Machine Learning:) Tj
+ET
+endstream
+endobj
+5 0 obj
+<</Type /Page
+/Parent 1 0 R
+/Resources 2 0 R
+/MediaBox [0 0 595.2799999999999727 841.8899999999999864]
+/Contents 6 0 R
+>>
+endobj
+6 0 obj
+<<
+/Length 4081
+>>
+stream
+0.200025 w
+0 G
+BT
+/F1 12 Tf
+13.7999999999999989 TL
+0. g
+40. 781.8899999999999864 Td
+(Classification: Probability is used to estimate the likelihood of a data point belonging to a) Tj
+ET
+BT
+/F1 12 Tf
+13.7999999999999989 TL
+0. g
+40. 761.8899999999999864 Td
+(particular class.) Tj
+ET
+BT
+/F1 12 Tf
+13.7999999999999989 TL
+0. g
+40. 741.8899999999999864 Td
+(Regression: Probability distributions are used to model the uncertainty in the predicted values.) Tj
+ET
+BT
+/F1 12 Tf
+13.7999999999999989 TL
+0. g
+40. 721.8899999999999864 Td
+(Bayesian Inference: Probability is used to update beliefs about model parameters based on) Tj
+ET
+BT
+/F1 12 Tf
+13.7999999999999989 TL
+0. g
+40. 701.8899999999999864 Td
+(observed data.) Tj
+ET
+BT
+/F1 12 Tf
+13.7999999999999989 TL
+0. g
+40. 681.8899999999999864 Td
+(Generative Models: Probability distributions are used to generate new data samples that) Tj
+ET
+BT
+/F1 12 Tf
+13.7999999999999989 TL
+0. g
+40. 661.8899999999999864 Td
+(resemble the training data.) Tj
+ET
+BT
+/F1 12 Tf
+13.7999999999999989 TL
+0. g
+40. 641.8899999999999864 Td
+(Reinforcement Learning: Probability is used to model the stochastic environment and to make) Tj
+ET
+BT
+/F1 12 Tf
+13.7999999999999989 TL
+0. g
+40. 621.8899999999999864 Td
+(decisions under uncertainty.) Tj
+ET
+BT
+/F1 12 Tf
+13.7999999999999989 TL
+0. g
+40. 581.8899999999999864 Td
+(5. Common Probability Distributions in Machine Learning:) Tj
+ET
+BT
+/F1 12 Tf
+13.7999999999999989 TL
+0. g
+40. 541.8899999999999864 Td
+(Bernoulli Distribution:  Models the probability of a single binary outcome \(e.g., success or failure\).) Tj
+ET
+BT
+/F1 12 Tf
+13.7999999999999989 TL
+0. g
+40. 521.8899999999999864 Td
+(Binomial Distribution: Models the number of successes in a fixed number of independent) Tj
+ET
+BT
+/F1 12 Tf
+13.7999999999999989 TL
+0. g
+40. 501.8899999999999864 Td
+(Bernoulli trials.) Tj
+ET
+BT
+/F1 12 Tf
+13.7999999999999989 TL
+0. g
+40. 481.8899999999999864 Td
+(Poisson Distribution: Models the number of events occurring in a fixed interval of time or space.) Tj
+ET
+BT
+/F1 12 Tf
+13.7999999999999989 TL
+0. g
+40. 461.8899999999999864 Td
+(Normal Distribution \(Gaussian\):  A bell-shaped distribution widely used to model continuous data.) Tj
+ET
+BT
+/F1 12 Tf
+13.7999999999999989 TL
+0. g
+40. 441.8899999999999864 Td
+(Exponential Distribution: Models the time until an event occurs.) Tj
+ET
+BT
+/F1 12 Tf
+13.7999999999999989 TL
+0. g
+40. 421.8899999999999864 Td
+(Uniform Distribution: Assigns equal probability to all outcomes within a given range.) Tj
+ET
+BT
+/F1 12 Tf
+13.7999999999999989 TL
+0. g
+40. 381.8899999999999864 Td
+(6. Key concepts for Machine Learning:) Tj
+ET
+BT
+/F1 12 Tf
+13.7999999999999989 TL
+0. g
+40. 341.8899999999999864 Td
+(Expected Value: The average value of a random variable.) Tj
+ET
+BT
+/F1 12 Tf
+13.7999999999999989 TL
+0. g
+40. 321.8899999999999864 Td
+(Variance: A measure of the spread or variability of a random variable.) Tj
+ET
+BT
+/F1 12 Tf
+13.7999999999999989 TL
+0. g
+40. 301.8899999999999864 Td
+(Covariance: A measure of how two random variables vary together.) Tj
+ET
+BT
+/F1 12 Tf
+13.7999999999999989 TL
+0. g
+40. 281.8899999999999864 Td
+(Entropy: A measure of the uncertainty or randomness of a random variable.) Tj
+ET
+BT
+/F1 12 Tf
+13.7999999999999989 TL
+0. g
+40. 241.8899999999999864 Td
+(7. Challenges and Considerations:) Tj
+ET
+BT
+/F1 12 Tf
+13.7999999999999989 TL
+0. g
+40. 201.8899999999999864 Td
+(Data Bias: Probability models can be affected by biases in the training data.) Tj
+ET
+BT
+/F1 12 Tf
+13.7999999999999989 TL
+0. g
+40. 181.8899999999999864 Td
+(Model Selection: Choosing the right probability distribution for a given problem is crucial.) Tj
+ET
+BT
+/F1 12 Tf
+13.7999999999999989 TL
+0. g
+40. 161.8899999999999864 Td
+(Computational Complexity: Calculating probabilities can be computationally intensive, especially) Tj
+ET
+BT
+/F1 12 Tf
+13.7999999999999989 TL
+0. g
+40. 141.8899999999999864 Td
+(for complex models.) Tj
+ET
+BT
+/F1 12 Tf
+13.7999999999999989 TL
+0. g
+40. 101.8899999999999864 Td
+(8. Resources for Further Learning:) Tj
+ET
+BT
+/F1 12 Tf
+13.7999999999999989 TL
+0. g
+40. 61.8899999999999864 Td
+(Books:) Tj
+ET
+endstream
+endobj
+7 0 obj
+<</Type /Page
+/Parent 1 0 R
+/Resources 2 0 R
+/MediaBox [0 0 595.2799999999999727 841.8899999999999864]
+/Contents 8 0 R
+>>
+endobj
+8 0 obj
+<<
+/Length 1056
+>>
+stream
+0.200025 w
+0 G
+BT
+/F1 12 Tf
+13.7999999999999989 TL
+0. g
+40. 801.8899999999999864 Td
+("Probability and Statistics for Engineers and Scientists" by Walpole et al.) Tj
+ET
+BT
+/F1 12 Tf
+13.7999999999999989 TL
+0. g
+40. 781.8899999999999864 Td
+("Introduction to Probability" by Dimitri P. Bertsekas and John N. Tsitsiklis) Tj
+ET
+BT
+/F1 12 Tf
+13.7999999999999989 TL
+0. g
+40. 721.8899999999999864 Td
+(Online Courses:) Tj
+ET
+BT
+/F1 12 Tf
+13.7999999999999989 TL
+0. g
+40. 701.8899999999999864 Td
+(Coursera: "Introduction to Probability and Statistics" by Duke University) Tj
+ET
+BT
+/F1 12 Tf
+13.7999999999999989 TL
+0. g
+40. 681.8899999999999864 Td
+(edX: "Probability and Statistics for Data Science" by Harvard University) Tj
+ET
+BT
+/F1 12 Tf
+13.7999999999999989 TL
+0. g
+40. 601.8899999999999864 Td
+(Note: This is a brief overview of probability in Machine Learning. The field is vast and constantly) Tj
+ET
+BT
+/F1 12 Tf
+13.7999999999999989 TL
+0. g
+40. 581.8899999999999864 Td
+(evolving, and there are many more advanced concepts and applications not covered here.) Tj
+ET
+endstream
+endobj
+1 0 obj
+<</Type /Pages
+/Kids [3 0 R 5 0 R 7 0 R ]
+/Count 3
+>>
+endobj
+9 0 obj
+<<
+/Type /Font
+/BaseFont /Helvetica
+/Subtype /Type1
+/Encoding /WinAnsiEncoding
+/FirstChar 32
+/LastChar 255
+>>
+endobj
+10 0 obj
+<<
+/Type /Font
+/BaseFont /Helvetica-Bold
+/Subtype /Type1
+/Encoding /WinAnsiEncoding
+/FirstChar 32
+/LastChar 255
+>>
+endobj
+11 0 obj
+<<
+/Type /Font
+/BaseFont /Helvetica-Oblique
+/Subtype /Type1
+/Encoding /WinAnsiEncoding
+/FirstChar 32
+/LastChar 255
+>>
+endobj
+12 0 obj
+<<
+/Type /Font
+/BaseFont /Helvetica-BoldOblique
+/Subtype /Type1
+/Encoding /WinAnsiEncoding
+/FirstChar 32
+/LastChar 255
+>>
+endobj
+13 0 obj
+<<
+/Type /Font
+/BaseFont /Courier
+/Subtype /Type1
+/Encoding /WinAnsiEncoding
+/FirstChar 32
+/LastChar 255
+>>
+endobj
+14 0 obj
+<<
+/Type /Font
+/BaseFont /Courier-Bold
+/Subtype /Type1
+/Encoding /WinAnsiEncoding
+/FirstChar 32
+/LastChar 255
+>>
+endobj
+15 0 obj
+<<
+/Type /Font
+/BaseFont /Courier-Oblique
+/Subtype /Type1
+/Encoding /WinAnsiEncoding
+/FirstChar 32
+/LastChar 255
+>>
+endobj
+16 0 obj
+<<
+/Type /Font
+/BaseFont /Courier-BoldOblique
+/Subtype /Type1
+/Encoding /WinAnsiEncoding
+/FirstChar 32
+/LastChar 255
+>>
+endobj
+17 0 obj
+<<
+/Type /Font
+/BaseFont /Times-Roman
+/Subtype /Type1
+/Encoding /WinAnsiEncoding
+/FirstChar 32
+/LastChar 255
+>>
+endobj
+18 0 obj
+<<
+/Type /Font
+/BaseFont /Times-Bold
+/Subtype /Type1
+/Encoding /WinAnsiEncoding
+/FirstChar 32
+/LastChar 255
+>>
+endobj
+19 0 obj
+<<
+/Type /Font
+/BaseFont /Times-Italic
+/Subtype /Type1
+/Encoding /WinAnsiEncoding
+/FirstChar 32
+/LastChar 255
+>>
+endobj
+20 0 obj
+<<
+/Type /Font
+/BaseFont /Times-BoldItalic
+/Subtype /Type1
+/Encoding /WinAnsiEncoding
+/FirstChar 32
+/LastChar 255
+>>
+endobj
+21 0 obj
+<<
+/Type /Font
+/BaseFont /ZapfDingbats
+/Subtype /Type1
+/FirstChar 32
+/LastChar 255
+>>
+endobj
+22 0 obj
+<<
+/Type /Font
+/BaseFont /Symbol
+/Subtype /Type1
+/FirstChar 32
+/LastChar 255
+>>
+endobj
+2 0 obj
+<<
+/ProcSet [/PDF /Text /ImageB /ImageC /ImageI]
+/Font <<
+/F1 9 0 R
+/F2 10 0 R
+/F3 11 0 R
+/F4 12 0 R
+/F5 13 0 R
+/F6 14 0 R
+/F7 15 0 R
+/F8 16 0 R
+/F9 17 0 R
+/F10 18 0 R
+/F11 19 0 R
+/F12 20 0 R
+/F13 21 0 R
+/F14 22 0 R
+>>
+/XObject <<
+>>
+>>
+endobj
+23 0 obj
+<<
+/Producer (jsPDF 2.4.0)
+/CreationDate (D:20240721175658+05'30')
+>>
+endobj
+24 0 obj
+<<
+/Type /Catalog
+/Pages 1 0 R
+/OpenAction [3 0 R /FitH null]
+/PageLayout /OneColumn
+>>
+endobj
+xref
+0 25
+0000000000 65535 f 
+0000009778 00000 n 
+0000011611 00000 n 
+0000000015 00000 n 
+0000000152 00000 n 
+0000004263 00000 n 
+0000004400 00000 n 
+0000008533 00000 n 
+0000008670 00000 n 
+0000009847 00000 n 
+0000009972 00000 n 
+0000010103 00000 n 
+0000010237 00000 n 
+0000010375 00000 n 
+0000010499 00000 n 
+0000010628 00000 n 
+0000010760 00000 n 
+0000010896 00000 n 
+0000011024 00000 n 
+0000011151 00000 n 
+0000011280 00000 n 
+0000011413 00000 n 
+0000011515 00000 n 
+0000011863 00000 n 
+0000011949 00000 n 
+trailer
+<<
+/Size 25
+/Root 24 0 R
+/Info 23 0 R
+/ID [ <6ACF273D7C20760475105E75139C89D6> <6ACF273D7C20760475105E75139C89D6> ]
+>>
+startxref
+12053
+%%EOF

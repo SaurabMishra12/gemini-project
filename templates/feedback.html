@@ -1,0 +1,108 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow-lg border-0 rounded-lg">
+                <div class="card-header bg-primary text-white text-center py-4">
+                    <h2 class="font-weight-light my-2">We Value Your Feedback</h2>
+                </div>
+                <div class="card-body">
+                    <form id="feedbackForm" method="POST" action="{{ url_for('feedback') }}">
+                        <div class="mb-4">
+                            <label for="problem" class="form-label fw-bold">Feedback Category:</label>
+                            <select class="form-select form-select-lg" id="problem" name="problem" required>
+                                <option value="" selected disabled>Select category...</option>
+                                <option>Asking Questions</option>
+                                <option>Login Issue</option>
+                                <option>Practice Questions</option>
+                                <option>Interface</option>
+                                <option>Other</option>
+                            </select>
+                        </div>
+                        <div class="mb-4">
+                            <label for="feedback" class="form-label fw-bold">Your Feedback:</label>
+                            <textarea class="form-control" id="feedback" name="feedback" rows="5" required></textarea>
+                            <div id="feedbackHelp" class="form-text">Please provide as much detail as possible.</div>
+                        </div>
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-primary btn-lg">Submit Feedback</button>
+                        </div>
+                    </form>
+                </div>
+                <div class="card-footer text-center py-3">
+                    <div class="small">
+                        <i class="fas fa-envelope me-2"></i>Need direct support? Contact us at
+                        <a href="mailto:stepmentor@gmail.com">stepmentor@gmail.com</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const form = document.getElementById('feedbackForm');
+    const feedbackTextarea = document.getElementById('feedback');
+    const submitButton = form.querySelector('button[type="submit"]');
+
+    // Character count
+    feedbackTextarea.addEventListener('input', function() {
+        const remainingChars = 500 - this.value.length;
+        const helpText = document.getElementById('feedbackHelp');
+        helpText.textContent = `${remainingChars} characters remaining`;
+
+        if (remainingChars < 100) {
+            helpText.classList.add('text-warning');
+        } else {
+            helpText.classList.remove('text-warning');
+        }
+    });
+
+    // Form submission animation
+    form.addEventListener('submit', function(e) {
+        e.preventDefault();
+        submitButton.disabled = true;
+        submitButton.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Submitting...';
+
+        // Simulate form submission (replace with actual submission logic)
+        setTimeout(() => {
+            form.reset();
+            submitButton.innerHTML = '<i class="fas fa-check"></i> Feedback Submitted';
+            submitButton.classList.remove('btn-primary');
+            submitButton.classList.add('btn-success');
+
+            setTimeout(() => {
+                submitButton.disabled = false;
+                submitButton.innerHTML = 'Submit Feedback';
+                submitButton.classList.remove('btn-success');
+                submitButton.classList.add('btn-primary');
+            }, 3000);
+        }, 2000);
+    });
+});
+</script>
+
+<style>
+.card {
+    transition: all 0.3s ease-in-out;
+}
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 1rem 3rem rgba(0,0,0,.175)!important;
+}
+.form-control:focus, .form-select:focus {
+    border-color: #80bdff;
+    box-shadow: 0 0 0 0.2rem rgba(0,123,255,.25);
+}
+.btn-primary {
+    transition: all 0.3s ease;
+}
+.btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0,123,255,.5);
+}
+</style>
+{% endblock %}

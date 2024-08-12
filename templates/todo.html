@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>To-Do List</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            background-color: #f4f4f4;
+            display: flex;
+            flex-direction: column;
+        }
+        .container {
+            background: white;
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            margin: 20px;
+            transition: all 0.3s ease-in-out;
+            overflow-y: auto;
+        }
+        .container:hover {
+            box-shadow: 0 0 30px rgba(0, 0, 0, 0.2);
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 20px;
+        }
+        ul {
+            list-style-type: none;
+            padding: 0;
+            flex: 1;
+            overflow-y: auto;
+        }
+        li {
+            padding: 15px;
+            background: #e0e0e0;
+            margin-bottom: 10px;
+            border-radius: 8px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: background 0.3s;
+        }
+        li.completed {
+            text-decoration: line-through;
+            background: #d4edda;
+        }
+        form {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+        input[type="text"], input[type="date"], input[type="time"] {
+            width: 30%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            transition: all 0.3s ease-in-out;
+        }
+        input[type="text"]:focus, input[type="date"]:focus, input[type="time"]:focus {
+            border-color: #28a745;
+            box-shadow: 0 0 5px rgba(40, 167, 69, 0.5);
+        }
+        button {
+            padding: 10px 20px;
+            background: #28a745;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        button:hover {
+            background: #218838;
+        }
+        .complete-btn, .edit-btn, .delete-btn {
+            background: #007bff;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            padding: 6px 12px;
+            transition: background 0.3s;
+            margin-left: 5px;
+        }
+        .complete-btn:hover, .edit-btn:hover {
+            background: #0056b3;
+        }
+        .delete-btn {
+            background: #dc3545;
+        }
+        .delete-btn:hover {
+            background: #c82333;
+        }
+        @media (max-width: 768px) {
+            input[type="text"], input[type="date"], input[type="time"] {
+                width: 25%;
+            }
+        }
+        @media (max-width: 480px) {
+            form {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            input[type="text"], input[type="date"], input[type="time"] {
+                width: 100%;
+                margin-bottom: 10px;
+            }
+            button {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>To-Do List</h1>
+        <form id="todoForm">
+            <input type="text" name="item" placeholder="Add a new task" id="taskInput">
+            <input type="date" name="date_frame" id="dateInput">
+            <input type="time" name="time_frame" id="timeInput">
+            <button type="submit">Add</button>
+        </form>
+        <ul id="todoList">
+            <!-- List items will be dynamically added here -->
+        </ul>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const todoForm = document.getElementById('todoForm');
+            const taskInput = document.getElementById('taskInput');
+            const dateInput = document.getElementById('dateInput');
+            const timeInput = document.getElementById('timeInput');
+            const todoList = document.getElementById('todoList');
+            let todoItems = JSON.parse(localStorage.getItem('todoItems')) || [];
+
+            const renderTodos = () => {
+                todoList.innerHTML = '';
+                todoItems.forEach((item, index) => {
+                    const li = document.createElement('li');
+                    li.className = item.completed ? 'completed' : '';
+                    li.innerHTML = `
+                        <span>${item.text} (${item.date_frame || "I'd rather not lock in my to-do like it's a show time slot!"} ${item.time_frame || ''})</span>
+                        <div>
+                            <button class="complete-btn" onclick="completeTask(${index})">${item.completed ? 'Undo' : 'Complete'}</button>
+                            <button class="edit-btn" onclick="editTask(${index})">Edit</button>
+                            <button class="delete-btn" onclick="deleteTask(${index})">Delete</button>
+                        </div>
+                    `;
+                    todoList.appendChild(li);
+                });
+            };
+
+            const saveTodos = () => {
+                localStorage.setItem('todoItems', JSON.stringify(todoItems));
+            };
+
+            todoForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                const newItem = {
+                    text: taskInput.value,
+                    date_frame: dateInput.value,
+                    time_frame: timeInput.value,
+                    completed: false
+                };
+                todoItems.push(newItem);
+                saveTodos();
+                renderTodos();
+                taskInput.value = '';
+                dateInput.value = '';
+                timeInput.value = '';
+            });
+
+            window.completeTask = (index) => {
+                todoItems[index].completed = !todoItems[index].completed;
+                saveTodos();
+                renderTodos();
+            };
+
+            window.editTask = (index) => {
+                const newText = prompt('Edit task:', todoItems[index].text);
+                const newDate = prompt('Edit due date:', todoItems[index].date_frame);
+                const newTime = prompt('Edit due time:', todoItems[index].time_frame);
+                if (newText !== null) {
+                    todoItems[index].text = newText;
+                }
+                if (newDate !== null) {
+                    todoItems[index].date_frame = newDate;
+                }
+                if (newTime !== null) {
+                    todoItems[index].time_frame = newTime;
+                }
+                saveTodos();
+                renderTodos();
+            };
+
+            window.deleteTask = (index) => {
+                todoItems.splice(index, 1);
+                saveTodos();
+                renderTodos();
+            };
+
+            renderTodos();
+        });
+    </script>
+</body>
+</html>

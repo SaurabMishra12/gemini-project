@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI-powered Scientific Calculations and Simulations</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.7.0/chart.min.js"></script>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f0f2f5;
+            color: #333;
+        }
+        header {
+            background-color: #1a73e8;
+            color: white;
+            text-align: center;
+            padding: 1rem 0;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .container {
+            max-width: 1000px;
+            margin: 2rem auto;
+            padding: 2rem;
+            background-color: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+        }
+        .section {
+            margin-bottom: 2rem;
+            padding: 1rem;
+            background-color: #f8f9fa;
+            border-radius: 8px;
+        }
+        h2 {
+            color: #1a73e8;
+            border-bottom: 2px solid #1a73e8;
+            padding-bottom: 0.5rem;
+        }
+        .form-group {
+            margin-bottom: 1rem;
+        }
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: bold;
+            color: #555;
+        }
+        input, select, button {
+            width: 100%;
+            padding: 0.5rem;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 1rem;
+        }
+        button {
+            background-color: #1a73e8;
+            color: white;
+            border: none;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        button:hover {
+            background-color: #185abc;
+        }
+        .output {
+            background-color: #e8f0fe;
+            padding: 1rem;
+            border-radius: 4px;
+            border: 1px solid #1a73e8;
+            margin-top: 1rem;
+        }
+        #chart {
+            max-width: 100%;
+            height: 300px;
+            margin-top: 1rem;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>AI-powered Scientific Calculations and Simulations</h1>
+        <p>Perform complex calculations and run simulations with advanced AI assistance.</p>
+    </header>
+    <div class="container">
+        <div class="section">
+            <h2>Advanced Calculations</h2>
+            <form id="calculationForm">
+                <div class="form-group">
+                    <label for="equation">Enter Equation or Expression:</label>
+                    <input type="text" id="equation" name="equation" placeholder="e.g., sin(x) + cos(x) or 2x^2 + 3x - 5 = 0" required>
+                </div>
+                <div class="form-group">
+                    <label for="parameters">Parameters (if needed, comma-separated):</label>
+                    <input type="text" id="parameters" name="parameters" placeholder="e.g., x=2, y=3">
+                </div>
+                <div class="form-group">
+                    <button type="submit">Calculate</button>
+                </div>
+            </form>
+            <div id="result" class="output"></div>
+        </div>
+        <div class="section">
+            <h2>Advanced Simulations</h2>
+            <form id="simulationForm">
+                <div class="form-group">
+                    <label for="simulationType">Select Simulation Type:</label>
+                    <select id="simulationType" name="simulationType">
+                        <option value="randomWalk">Random Walk</option>
+                        <option value="heatDiffusion">Heat Diffusion</option>
+                        <option value="monteCarlo">Monte Carlo Simulation</option>
+                        <option value="fluidDynamics">Fluid Dynamics</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="iterations">Number of Iterations:</label>
+                    <input type="number" id="iterations" name="iterations" min="1" max="10000" value="1000" required>
+                </div>
+                <div class="form-group">
+                    <label for="parameters">Additional Parameters (JSON format):</label>
+                    <input type="text" id="parameters" name="parameters" placeholder='e.g., {"initialTemp": 100, "conductivity": 0.5}'>
+                </div>
+                <div class="form-group">
+                    <button type="submit">Run Simulation</button>
+                </div>
+            </form>
+            <div id="simulationResult" class="output"></div>
+            <canvas id="chart"></canvas>
+        </div>
+    </div>
+    <script>
+        let chart;
+
+        document.getElementById('calculationForm').addEventListener('submit', async function(event) {
+            event.preventDefault();
+            const equation = document.getElementById('equation').value;
+            const parameters = document.getElementById('parameters').value;
+
+            try {
+                const response = await fetch('/calculate', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ equation, parameters }),
+                });
+                const result = await response.json();
+                document.getElementById('result').innerText = `Result: ${result.result}`;
+            } catch (error) {
+                console.error('Error:', error);
+                document.getElementById('result').innerText = 'An error occurred during calculation.';
+            }
+        });
+
+        document.getElementById('simulationForm').addEventListener('submit', async function(event) {
+            event.preventDefault();
+            const simulationType = document.getElementById('simulationType').value;
+            const iterations = parseInt(document.getElementById('iterations').value, 10);
+            const parameters = document.getElementById('parameters').value;
+
+            try {
+                const response = await fetch('/simulate', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ simulationType, iterations, parameters }),
+                });
+                const result = await response.json();
+                document.getElementById('simulationResult').innerText = `Simulation completed. ${result.message}`;
+
+                if (result.data) {
+                    updateChart(result.data, simulationType);
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                document.getElementById('simulationResult').innerText = 'An error occurred during simulation.';
+            }
+        });
+
+        function updateChart(data, simulationType) {
+            const ctx = document.getElementById('chart').getContext('2d');
+
+            if (chart) {
+                chart.destroy();
+            }
+
+            chart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: data.map((_, index) => index),
+                    datasets: [{
+                        label: simulationType,
+                        data: data,
+                        borderColor: 'rgb(75, 192, 192)',
+                        tension: 0.1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+        }
+    </script>
+</body>
+</html>

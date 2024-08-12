@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Chatbot</title>
+    <style>
+        body {
+            background: #0d0d0d;
+            color: #f0f0f0;
+            font-family: 'Roboto', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+            max-width: 700px;
+        }
+
+        .chatbot {
+            background: #1f1f1f;
+            border-radius: 15px;
+            box-shadow: 0 0 30px rgba(0, 0, 0, 0.3);
+            width: 100%;
+            height: 600px;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .chatbot-header {
+            background: #333;
+            border-radius: 15px 15px 0 0;
+            padding: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #444;
+        }
+
+        .chatbot-header h2 {
+            margin: 0;
+            color: #00c6ff;
+            font-size: 1.2em;
+        }
+
+        .status {
+            color: #00ff99;
+            font-weight: bold;
+        }
+
+        .chatbot-messages {
+            padding: 20px;
+            flex: 1;
+            overflow-y: auto;
+            background: #1c1c1c;
+            border-bottom: 1px solid #333;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .chatbot-messages .message {
+            margin: 10px 0;
+            padding: 10px;
+            border-radius: 15px;
+            background: #333;
+            position: relative;
+            animation: fadeIn 0.5s;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+
+        .chatbot-messages .user-message {
+            background: #00c6ff;
+            color: #fff;
+            align-self: flex-end;
+            border-radius: 15px 15px 0 15px;
+        }
+
+        .chatbot-messages .bot-message {
+            background: #1f1f1f;
+            color: #00c6ff;
+            align-self: flex-start;
+            border-radius: 15px 15px 15px 0;
+        }
+
+        .chatbot-messages .timestamp {
+            font-size: 0.75em;
+            color: #888;
+            margin-top: 5px;
+        }
+
+        .chatbot-input {
+            display: flex;
+            padding: 15px;
+            background: #2e2e2e;
+            border-radius: 0 0 15px 15px;
+            align-items: center;
+            border-top: 1px solid #333;
+        }
+
+        .chatbot-input input {
+            flex: 1;
+            padding: 10px;
+            border: none;
+            border-radius: 10px;
+            margin-right: 15px;
+            outline: none;
+            background: #444;
+            color: #fff;
+        }
+
+        .chatbot-input button {
+            padding: 10px 20px;
+            background: #00c6ff;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: background 0.3s;
+            color: #fff;
+            font-weight: bold;
+        }
+
+        .chatbot-input button:hover {
+            background: #0097a7;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .loading {
+            display: none;
+            align-self: center;
+            color: #00c6ff;
+            margin: 10px 0;
+            font-weight: bold;
+        }
+
+        .loading:before {
+            content: " ";
+            display: block;
+            width: 12px;
+            height: 12px;
+            margin: 0 auto;
+            border-radius: 50%;
+            background: #00c6ff;
+            animation: bounce 1.5s infinite;
+        }
+
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% {
+                transform: translateY(0);
+            }
+            40% {
+                transform: translateY(-30px);
+            }
+            60% {
+                transform: translateY(-15px);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="chatbot">
+            <div class="chatbot-header">
+                <h2>AI Chatbot</h2>
+                <div class="status">Online</div>
+            </div>
+            <div class="chatbot-messages" id="chatbot-messages"></div>
+            <div class="loading" id="loading">Typing...</div>
+            <div class="chatbot-input">
+                <input type="text" id="user-input" placeholder="Type a message..." onkeydown="if(event.key === 'Enter') sendMessage()">
+                <button onclick="sendMessage()">Send</button>
+            </div>
+        </div>
+    </div>
+    <script>
+        async function sendMessage() {
+            const userInput = document.getElementById('user-input').value;
+            if (userInput.trim() === "") return;
+
+            const messagesContainer = document.getElementById('chatbot-messages');
+            const loadingIndicator = document.getElementById('loading');
+
+            const userMessage = document.createElement('div');
+            userMessage.classList.add('message', 'user-message');
+            userMessage.textContent = userInput;
+            messagesContainer.appendChild(userMessage);
+
+            const timestamp = document.createElement('div');
+            timestamp.classList.add('timestamp');
+            const now = new Date();
+            timestamp.textContent = now.toLocaleTimeString();
+            userMessage.appendChild(timestamp);
+
+            document.getElementById('user-input').value = "";
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+
+            loadingIndicator.style.display = 'block';
+
+            const response = await fetch('/get_response', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ message: userInput }),
+            }).then(res => res.json());
+
+            loadingIndicator.style.display = 'none';
+
+            const botResponse = document.createElement('div');
+            botResponse.classList.add('message', 'bot-message');
+            botResponse.textContent = response.response.replace(/<\/?[^>]+(>|$)/g, "");
+            messagesContainer.appendChild(botResponse);
+
+            const botTimestamp = document.createElement('div');
+            botTimestamp.classList.add('timestamp');
+            botTimestamp.textContent = now.toLocaleTimeString();
+            botResponse.appendChild(botTimestamp);
+
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+        }
+    </script>
+</body>
+</html>

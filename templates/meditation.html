@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Daily Calm - 10-Minute Guided Meditation</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body class="bg-gray-100 font-sans">
+    <div class="min-h-screen flex flex-col">
+        <header class="bg-blue-600 text-white py-4">
+            <div class="container mx-auto px-4">
+                <h1 class="text-3xl font-bold">Daily Calm</h1>
+                <p class="text-lg">10-Minute Guided Meditation</p>
+            </div>
+        </header>
+
+        <main class="flex-grow container mx-auto px-4 py-8">
+            <div class="bg-white rounded-lg shadow-lg overflow-hidden">
+                <div class="p-6">
+                    <h2 class="text-2xl font-semibold mb-4">Center Your Mind, Relax Your Body</h2>
+                    <p class="text-gray-600 mb-6">Welcome to your daily moment of calm. This 10-minute guided meditation is designed to help you find peace and tranquility in your busy day. Find a comfortable position, take a deep breath, and let's begin.</p>
+
+                    <div class="image-container">
+  <img src="static/images/natures img.jpg" alt="Serene nature scene">
+</div>
+
+                        <div class="text-center">
+                            <p id="timer" class="text-4xl font-bold text-blue-600 mb-4">10:00</p>
+                            <div class="flex justify-center space-x-4">
+                                <button id="playPauseBtn" class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-full transition duration-300 ease-in-out flex items-center">
+                                    <i class="fas fa-play mr-2"></i> <span>Play</span>
+                                </button>
+                                <button id="resetBtn" class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded-full transition duration-300 ease-in-out flex items-center">
+                                    <i class="fas fa-undo mr-2"></i> Reset
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mb-6">
+                        <h3 class="text-xl font-semibold mb-2">How to Prepare</h3>
+                        <ul class="list-disc list-inside text-gray-600">
+                            <li>Find a quiet, comfortable space where you won't be disturbed</li>
+                            <li>Sit in a relaxed position with your back straight</li>
+                            <li>Wear comfortable clothing</li>
+                            <li>Consider using headphones for an immersive experience</li>
+                        </ul>
+                    </div>
+
+                    <div>
+                        <h3 class="text-xl font-semibold mb-2">Benefits of Daily Meditation</h3>
+                        <ul class="list-disc list-inside text-gray-600">
+                            <li>Reduces stress and anxiety</li>
+                            <li>Improves focus and concentration</li>
+                            <li>Enhances emotional well-being</li>
+                            <li>Promotes better sleep</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <footer class="bg-gray-200 py-4">
+            <div class="container mx-auto px-4 text-center text-gray-600">
+                <p></p>
+            </div>
+        </footer>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            let timer;
+            let timeLeft = 600; // 10 minutes in seconds
+            const timerDisplay = $('#timer');
+            const playPauseBtn = $('#playPauseBtn');
+            const resetBtn = $('#resetBtn');
+            let isPlaying = false;
+
+            function updateTimerDisplay() {
+                const minutes = Math.floor(timeLeft / 60);
+                const seconds = timeLeft % 60;
+                timerDisplay.text(`${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`);
+            }
+
+            function startTimer() {
+                timer = setInterval(function() {
+                    if (timeLeft > 0) {
+                        timeLeft--;
+                        updateTimerDisplay();
+                    } else {
+                        clearInterval(timer);
+                        playPauseBtn.html('<i class="fas fa-play mr-2"></i> <span>Play</span>');
+                        isPlaying = false;
+                    }
+                }, 1000);
+            }
+
+            playPauseBtn.click(function() {
+                if (isPlaying) {
+                    clearInterval(timer);
+                    $(this).html('<i class="fas fa-play mr-2"></i> <span>Play</span>');
+                } else {
+                    startTimer();
+                    $(this).html('<i class="fas fa-pause mr-2"></i> <span>Pause</span>');
+                }
+                isPlaying = !isPlaying;
+            });
+
+            resetBtn.click(function() {
+                clearInterval(timer);
+                timeLeft = 600;
+                updateTimerDisplay();
+                playPauseBtn.html('<i class="fas fa-play mr-2"></i> <span>Play</span>');
+                isPlaying = false;
+            });
+
+            updateTimerDisplay();
+        });
+    </script>
+</body>
+</html>

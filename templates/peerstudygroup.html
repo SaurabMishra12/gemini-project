@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Peer Study Groups</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+        }
+        .container {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+            width: 90%;
+            max-width: 800px;
+            margin: 20px;
+            text-align: center;
+        }
+        h1 {
+            margin-bottom: 20px;
+            color: #333;
+        }
+        .button-container, .pin-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .button-container button, .pin-container button {
+            padding: 15px 30px;
+            margin: 10px;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            font-size: 16px;
+        }
+        .button-container button:hover, .pin-container button:hover {
+            background-color: #218838;
+        }
+        .pin-container {
+            margin-top: 20px;
+            width: 100%;
+        }
+        .pin-container input {
+            width: calc(100% - 60px);
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+            font-size: 16px;
+        }
+        .pin-list {
+            list-style: none;
+            padding: 0;
+            width: 100%;
+        }
+        .pin-list li {
+            background: #e0e0e0;
+            margin: 10px 0;
+            padding: 15px;
+            border-radius: 8px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .pin-list li button {
+            background: #dc3545;
+            border: none;
+            border-radius: 8px;
+            color: white;
+            padding: 10px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .pin-list li button:hover {
+            background: #c82333;
+        }
+        .pin-list span {
+            display: flex;
+            flex-direction: column;
+        }
+        .pin-list span .link {
+            font-weight: bold;
+        }
+        .pin-list span .details {
+            font-size: 0.9em;
+            color: #555;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Peer Study Groups</h1>
+        <div class="button-container">
+            <button onclick="window.location.href='https://meet.google.com/'">Host a Meeting</button>
+            <button onclick="window.location.href='https://meet.google.com/'">Plan a Meeting</button>
+            <button onclick="window.location.href='https://meet.google.com/'">Join a Meeting</button>
+        </div>
+        <div class="pin-container">
+            <input type="text" id="userName" placeholder="Your name">
+            <input type="password" id="userPassword" placeholder="Create a password">
+            <input type="text" id="meetingLink" placeholder="Share your meeting link here...">
+            <button onclick="pinMeeting()">Pin Meeting Link</button>
+            <ul id="pinList" class="pin-list">
+                <!-- Pinned meeting links will be added here dynamically -->
+            </ul>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', (event) => {
+            const pinList = document.getElementById('pinList');
+            let meetings = JSON.parse(localStorage.getItem('meetings')) || [];
+            const superUserPassword = "superuser123"; // Define the super user password
+
+            const renderMeetings = () => {
+                pinList.innerHTML = '';
+                meetings.forEach((meeting, index) => {
+                    const li = document.createElement('li');
+                    li.innerHTML = `
+                        <span>
+                            <span class="link">${meeting.link}</span>
+                            <span class="details">Shared by ${meeting.user} at ${meeting.time}</span>
+                        </span>
+                        <button onclick="deleteMeeting(${index})">Delete</button>
+                    `;
+                    pinList.appendChild(li);
+                });
+            };
+
+            window.pinMeeting = () => {
+                const userName = document.getElementById('userName').value;
+                const userPassword = document.getElementById('userPassword').value;
+                const meetingLink = document.getElementById('meetingLink').value;
+                if (userName === '' || userPassword === '' || meetingLink === '') {
+                    alert("Please enter your name, password, and the meeting link!");
+                    return;
+                }
+                const currentTime = new Date().toLocaleString();
+                const newMeeting = {
+                    user: userName,
+                    password: userPassword,
+                    link: meetingLink,
+                    time: currentTime
+                };
+                meetings.push(newMeeting);
+                localStorage.setItem('meetings', JSON.stringify(meetings));
+                renderMeetings();
+                document.getElementById('userName').value = '';
+                document.getElementById('userPassword').value = '';
+                document.getElementById('meetingLink').value = '';
+            };
+
+            window.deleteMeeting = (index) => {
+                const userPassword = prompt("Enter your password to delete this link :");
+                console.log('Entered password:', userPassword);  // Debugging line
+                console.log('Meeting password:', meetings[index].password);  // Debugging line
+                console.log('Super user password:', superUserPassword);  // Debugging line
+                if (userPassword === meetings[index].password || userPassword === superUserPassword) {
+                    meetings.splice(index, 1);
+                    localStorage.setItem('meetings', JSON.stringify(meetings));
+                    renderMeetings();
+                } else {
+                    alert("Incorrect password. You are not authorized to delete this link.");
+                }
+            };
+
+            renderMeetings();
+        });
+    </script>
+</body>
+</html>

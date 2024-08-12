@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Motivational Hub</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap');
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+
+        .glass-effect {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.18);
+        }
+
+        .video-item {
+            transition: all 0.3s ease;
+        }
+
+        .video-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        .running-man {
+            position: fixed;
+            bottom: 10px;
+            left: -100px;
+            width: 200px;
+            height: 250px;
+            background: url('https://media.tenor.com/--AQwe1rA8EAAAAi/batman-pixel-art.gif') no-repeat center center;
+            background-size: contain;
+            animation: run 15s linear infinite;
+            z-index: 1000;
+        }
+
+        @keyframes run {
+            0% { left: -100px; }
+            100% { left: calc(100vw + 100px); }
+        }
+
+        .running-man.rest {
+            animation: none;
+            background: url('https://www.svgrepo.com/show/24362/sleep.svg') no-repeat center center;
+            background-size: contain;
+        }
+    </style>
+</head>
+<body class="text-white">
+    <div class="container mx-auto px-4 py-8">
+        <h1 class="text-4xl font-bold text-center mb-8 animate__animated animate__fadeInDown">Motivational Hub</h1>
+
+        <div class="glass-effect p-6 mb-8 animate__animated animate__fadeIn">
+            <input type="text" id="searchInput" placeholder="Search videos..." class="w-full px-4 py-2 rounded-full bg-white bg-opacity-20 text-white placeholder-gray-300 focus:outline-none focus:ring-2 focus:ring-purple-500">
+        </div>
+
+        <div id="videoList" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <!-- Video items will be dynamically added here -->
+        </div>
+    </div>
+
+    <div class="running-man" id="runningMan"></div>
+
+    <script>
+        const videos = [
+            { title: "The Power of Passion", author: "Eric Thomas", url: "https://www.youtube.com/watch?v=r5tX84CCmWc" },
+            { title: "The Obstacle is the Way", author: "Ryan Holiday", url: "https://www.youtube.com/watch?v=Snmh_IJL8M0" },
+            { title: "Believe in Yourself", author: "Denzel Washington", url: "https://www.youtube.com/watch?v=aspX6zqB88w" },
+            { title: "The Secrets of Success", author: "Arnold Schwarzenegger", url: "https://www.youtube.com/watch?v=Kb7_E12FFLw" },
+            { title: "Dream", author: "Motivational Video", url: "https://www.youtube.com/watch?v=g-jwWYX7Jlo" },
+            { title: "Unbroken", author: "Les Brown", url: "https://www.youtube.com/watch?v=26U_seo0a1g" }
+        ];
+
+        const videoList = document.getElementById('videoList');
+        const searchInput = document.getElementById('searchInput');
+        const runningMan = document.getElementById('runningMan');
+
+        function createVideoItem(video) {
+            const item = document.createElement('div');
+            item.className = 'video-item glass-effect p-6 rounded-xl transition duration-300 ease-in-out animate__animated animate__fadeInUp';
+            item.innerHTML = `
+                <h3 class="text-xl font-semibold mb-2">${video.title}</h3>
+                <p class="text-gray-300 mb-4">by ${video.author}</p>
+                <a href="${video.url}" target="_blank" class="inline-block bg-purple-600 hover:bg-purple-700 text-white font-bold py-2 px-4 rounded transition duration-300 ease-in-out">
+                    Watch Now
+                </a>
+            `;
+            return item;
+        }
+
+        function displayVideos(videosToDisplay) {
+            videoList.innerHTML = '';
+            videosToDisplay.forEach(video => {
+                videoList.appendChild(createVideoItem(video));
+            });
+        }
+
+        searchInput.addEventListener('input', (e) => {
+            const searchTerm = e.target.value.toLowerCase();
+            const filteredVideos = videos.filter(video =>
+                video.title.toLowerCase().includes(searchTerm) ||
+                video.author.toLowerCase().includes(searchTerm)
+            );
+            displayVideos(filteredVideos);
+        });
+
+        runningMan.addEventListener('click', () => {
+            runningMan.classList.toggle('rest');
+        });
+
+        // Initial display
+        displayVideos(videos);
+    </script>
+</body>
+</html>

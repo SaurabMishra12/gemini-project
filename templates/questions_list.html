@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2>Select a Question</h2>
+<form method="POST" action="{{ url_for('solve_question') }}">
+    <div class="form-group">
+        <label for="questions">Choose a question:</label>
+        <select class="form-control" id="questions" name="qid">
+            {% for qid, question in questions.items() %}
+            <option value="{{ qid }}">Question {{ qid }}: {{ question }}</option>
+            {% endfor %}
+        </select>
+    </div>
+    <button type="submit" class="btn btn-primary">Start</button>
+</form>
+{% endblock %}

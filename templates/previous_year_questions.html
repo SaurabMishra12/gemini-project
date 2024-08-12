@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Previous Year Questions</title>
+</head>
+<body>
+    <div class="container">
+        <h1>Previous Year Questions for {{ year }} - {{ shift }}</h1>
+        <ul class="list-group">
+            {% for question in questions %}
+                <li class="list-group-item">{{ question }}</li>
+            {% endfor %}
+        </ul>
+    </div>
+</body>
+</html>

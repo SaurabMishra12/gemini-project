@@ -1,0 +1,99 @@
+1.Light year is a unit of :
+(a) Time
+(b) Mass
+(c) Distance
+(d) Energy
+
+2. The magnitude of any physical quantity:
+ (a) Depends on the method of measurement
+  (b) Does not depend on the method of measurement
+  (c) Is more in SI system than in CGS system
+  (d) Directly proportional to the fundamental units of mass, length and time
+
+Q3: A horizontal force of 10 N is necessary to just hold a block stationary against a wall. The coefficient of friction between the block and the wall is 0.2. The weight of the block is-
+(a) 20 N
+(b) 50 N
+(c) 100 N
+(d) 2 N
+
+4. If the unit of length and force be increased four times, then the unit of energy is:
+(a) Increased 4 times
+(b) Increased 8 times
+(c) Increased 16 times
+(d) Decreased 16 times
+
+Q4: A marble block of mass 2 kg lying on ice when given a velocity of 6 m/s is stopped by friction in 10s. Then the coefficient of friction is (consider g =10m/s)
+(a) 0.02
+(b) 0.03
+(c) 0.06
+(d) 0.01
+
+6. Universal time is based on
+(a) Rotation of the earth on its axis
+(b) Earth's orbital motion around the earth
+(c) Vibrations of cesium atom
+(d) Oscillations of quartz crystal
+
+7. Which of the options has two quantities that have different dimensions:
+(a) Reynold’s number and coefficient of friction
+(b) Curie and frequency of light
+(c) Latent heat and gravitation constant
+(d) Planck’s constant and angular momentum
+
+8. Brakes in truck can produce a maximum retardation of 2 m/s2. Minimum distance required by truck moving with speed 4 m/s for stopping if reaction time of the driver is 0.2 sec, is :-
+(A) 4 m         (B) 4.2 m
+(C) 4.8 m       (D) 5.2 m
+
+9. An object is taken to a height above the surface of earth at a distance (5/4)R from the centre of the earth. Where radius of earth, R = 6400 km. The percentage decrease in the weight of the object will be: options are :
+   (A) 36%               (B) 50%
+   (C) 64%                (D) 25%
+
+10. In a potentiometer arrangement, a cell of emf 1.20 V gives a balance point at 36 cm length of wire. This cell is now replaced by another cell of emf 1.80 V. The difference in balancing length of potentiometer wire in above conditions will be _______ cm.
+
+11. A projectile is fired from horizontal ground with speed v and projection angle θ. When the acceleration due to gravity is g, the range of the projectile is d. If at the highest point in its trajectory, the projectile enters a different region where the effective acceleration due to gravity is g(eff)= g/0.81, then the new range is D = nd. The value of n is _____
+
+12. A person of height 1.6 m is walking away from a lamp post of height 4 m along a straight path on the flat ground. The lamp post and the person are always perpendicular to the ground. If the speed of the person is 60 cm s−1, the speed of the tip of the person’s shadow on the ground with respect to the person is:_____cm-1/sec
+
+13. During peddling of a bicycle, the force of friction exerted by the ground on the two wheels is such that it acts
+(a) in the backward direction on the front wheel and in the forward direction on the rear wheel
+(b) in the forward direction on the front wheel and in the backward direction on the rear wheel
+(c) in the backward direction on both, the front and the rear wheels
+(d) in the forward direction on both, the front and the rear wheels.
+
+14.A particle of mass m is moving in a circular path of constant radius r such that its centripetal acceleration ac is varying with time ‘t’ as ac = k2rt2 where ‘k’ is a constant. The power delivered to the particle by the force acting on it is
+(a) 2πmk2r2t
+(b) mk2r2t
+(c) mk4r2t5/3
+(d) zero
+
+15. When a rubber-band is stretched by a distance x, it exerts a restoring force of magnitude F =ax + bx2 where a and b are constants. The work done in stretching the unstretched rubber-band by L is
+(a) aL2/2 +bL3/3     (b) ½ (aL2/2 +bL3/3)
+(c) aL2 +bL3         (d) ½ (aL2 +bL3)
+
+16.A wind-powered generator converts wind energy into electrical energy. Assume that the generator converts a fixed fraction of the wind energy intercepted by its blades into electrical energy. For wind speed v, the electrical power output will be proportional to
+(a) v                   (b) v2
+(c) v3                  (d) v4
+
+17. It is found that if a neutron suffers an elastic collinear collision with deuterium at rest, fractional loss of its energy is Pd; while for its similar collision with carbon nucleus at rest, fractional loss of energy is Pc. The values of Pd and Pc are respectively :
+(a) (0.28,0 .89)
+(b) (0, 0)
+(c) (0, 1)
+(d) (0.89,0.28)
+
+18. A child is standing with folded hands at the centre of a platform rotating about its central axis. The kinetic energy of the system is K. The child now stretches his arms so that the moment of inertia of the system doubles. The kinetic energy of the system now is
+a. 2K
+b. K/2
+c. K/4
+d. 4K
+
+19. A bob of mass m attached to an inextensible string of length is suspended from a vertical support. The bob rotates in a horizontal circle with an angular speed ω rad/s about the vertical. About the point of suspension
+(a) Angular momentum changes in direction but not in magnitude
+(b) Angular momentum changes both in direction and magnitude
+(c) Angular momentum is conserved
+(d) Angular momentum changes in magnitude but not in direction.
+
+20. A pulley of radius 2 m is rotated about its axis by a force F =20t-5t2 newton (where t is measured in seconds) applied tangentially. If the moment of inertia of the pulley about its axis of rotation is 10 kgm2, the number of rotations made by the pulley before its direction of motion it reversed, is
+(a) more than 6 but less than 9
+(b) more than 9
+(c) less than 3
+(d) more than 3 but less than 6

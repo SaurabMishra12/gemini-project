@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Formulae Sheet</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            color: #333;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: #282c34;
+            padding: 20px;
+            color: white;
+        }
+        header h1 {
+            margin: 0;
+        }
+        nav ul {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+            display: flex;
+        }
+        nav ul li {
+            margin: 0 10px;
+        }
+        nav ul li a {
+            color: white;
+            text-decoration: none;
+        }
+        section {
+            background: white;
+            margin: 20px 0;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .pdf-links a {
+            display: block;
+            margin: 10px 0;
+            color: #007bff;
+            text-decoration: none;
+        }
+        .controls {
+            margin-bottom: 10px;
+        }
+        button {
+            padding: 10px 20px;
+            margin: 5px;
+            border: none;
+            background-color: #007bff;
+            color: white;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        .flashcard, .mindmap-node {
+            border: 1px solid #ddd;
+            padding: 10px;
+            margin: 5px;
+            border-radius: 5px;
+            background: #f9f9f9;
+            position: relative;
+        }
+        .edit-btn, .delete-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            margin-left: 5px;
+            background-color: #f44336;
+        }
+        .edit-btn {
+            background-color: #ffc107;
+        }
+        .edit-btn:hover {
+            background-color: #e0a800;
+        }
+        .delete-btn:hover {
+            background-color: #d32f2f;
+        }
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgb(0,0,0);
+            background-color: rgba(0,0,0,0.4);
+        }
+        .modal-content {
+            background-color: #fefefe;
+            margin: 15% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%;
+            max-width: 600px;
+        }
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+        }
+        .close:hover,
+        .close:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+        }
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+            width: 100%;
+            padding: 8px;
+            box-sizing: border-box;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Formulae Sheet</h1>
+            <nav>
+                <ul>
+                    <li><a href="#physics">Physics</a></li>
+                    <li><a href="#chemistry">Chemistry</a></li>
+                    <li><a href="#mathematics">Mathematics</a></li>
+                    <li><a href="#biology">Biology</a></li>
+                </ul>
+            </nav>
+        </header>
+
+        <section id="pdf-viewer">
+            <h2>Formulae PDFs</h2>
+            <div class="pdf-links">
+                <a href="{{ url_for('static', filename='pdfs/physics_formulae.pdf') }}" target="_blank">Physics Formulae</a>
+                <a href="{{ url_for('static', filename='pdfs/chemistry_formulae.pdf') }}" target="_blank">Chemistry Formulae</a>
+                <a href="{{ url_for('static', filename='pdfs/mathematics_formulae.pdf') }}" target="_blank">Mathematics Formulae</a>
+                <a href="{{ url_for('static', filename='pdfs/biology_formulae.pdf') }}" target="_blank">Biology Formulae</a>
+            </div>
+        </section>
+
+        <section id="flashcards">
+            <h2>Flashcards</h2>
+            <div class="controls">
+                <button id="create-flashcard">Create Flashcard</button>
+            </div>
+            <div id="flashcards-container"></div>
+        </section>
+
+        <section id="mindmaps">
+            <h2>Mind Maps</h2>
+            <div class="controls">
+                <button id="create-mindmap">Create Mind Map</button>
+            </div>
+            <div id="mindmaps-container"></div>
+        </section>
+
+        <section id="mnemonics">
+            <h2>Mnemonics</h2>
+            <p>Coming Soon...</p>
+        </section>
+    </div>
+
+    <!-- Flashcard Modal -->
+    <div id="flashcardModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2 id="flashcardModalTitle">Create Flashcard</h2>
+            <div class="form-group">
+                <label for="flashcardHeading">Heading</label>
+                <input type="text" id="flashcardHeading">
+            </div>
+            <div class="form-group">
+                <label for="flashcardContent">Content</label>
+                <textarea id="flashcardContent" rows="4"></textarea>
+            </div>
+            <div class="form-group">
+                <label for="flashcardFontSize">Font Size</label>
+                <select id="flashcardFontSize">
+                    <option value="14px">14px</option>
+                    <option value="16px">16px</option>
+                    <option value="18px">18px</option>
+                    <option value="20px">20px</option>
+                </select>
+            </div>
+            <button id="saveFlashcard">Save</button>
+        </div>
+    </div>
+
+    <!-- Mindmap Modal -->
+    <div id="mindmapModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2 id="mindmapModalTitle">Create Mind Map</h2>
+            <div class="form-group">
+                <label for="mindmapNode">Node Content</label>
+                <input type="text" id="mindmapNode">
+            </div>
+            <div class="form-group">
+                <label for="mindmapColor">Node Color</label>
+                <input type="color" id="mindmapColor">
+            </div>
+            <button id="saveMindmap">Save</button>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            loadFlashcards();
+            loadMindmaps();
+
+            // Modal handling
+            var flashcardModal = $('#flashcardModal');
+            var mindmapModal = $('#mindmapModal');
+            var flashcardModalTitle = $('#flashcardModalTitle');
+            var mindmapModalTitle = $('#mindmapModalTitle');
+            var currentFlashcardIndex = null;
+            var currentMindmapIndex = null;
+
+            $('.close').click(function() {
+                flashcardModal.hide();
+                mindmapModal.hide();
+            });
+
+            $(window).click(function(event) {
+                if (event.target == flashcardModal[0]) {
+                    flashcardModal.hide();
+                }
+                if (event.target == mindmapModal[0]) {
+                    mindmapModal.hide();
+                }
+            });
+
+            $('#create-flashcard').click(function() {
+                currentFlashcardIndex = null;
+                flashcardModalTitle.text('Create Flashcard');
+                $('#flashcardHeading').val('');
+                $('#flashcardContent').val('');
+                $('#flashcardFontSize').val('16px');
+                flashcardModal.show();
+            });
+
+            $('#create-mindmap').click(function() {
+                currentMindmapIndex = null;
+                mindmapModalTitle.text('Create Mind Map');
+                $('#mindmapNode').val('');
+                $('#mindmapColor').val('#000000');
+                mindmapModal.show();
+            });
+
+            $('#saveFlashcard').click(function() {
+                let flashcard = {
+                    heading: $('#flashcardHeading').val(),
+                    content: $('#flashcardContent').val(),
+                    fontSize: $('#flashcardFontSize').val()
+                };
+                saveFlashcard(flashcard);
+                flashcardModal.hide();
+            });
+
+            $('#saveMindmap').click(function() {
+                let mindmap = {
+                    content: $('#mindmapNode').val(),
+                    color: $('#mindmapColor').val()
+                };
+                saveMindmap(mindmap);
+                mindmapModal.hide();
+            });
+
+            function saveFlashcard(flashcard) {
+                let flashcards = JSON.parse(localStorage.getItem('flashcards')) || [];
+                if (currentFlashcardIndex !== null) {
+                    flashcards[currentFlashcardIndex] = flashcard;
+                } else {
+                    flashcards.push(flashcard);
+                }
+                localStorage.setItem('flashcards', JSON.stringify(flashcards));
+                loadFlashcards();
+            }
+
+            function loadFlashcards() {
+                let flashcards = JSON.parse(localStorage.getItem('flashcards')) || [];
+                let container = $('#flashcards-container');
+                container.empty();
+                flashcards.forEach(function(flashcard, index) {
+                    container.append(`<div class="flashcard" style="font-size: ${flashcard.fontSize};">
+                        <h3>${flashcard.heading}</h3>
+                        <p>${flashcard.content}</p>
+                        <button class="edit-btn" onclick="editFlashcard(${index})">Edit</button>
+                        <button class="delete-btn" onclick="deleteFlashcard(${index})">Delete</button>
+                    </div>`);
+                });
+            }
+
+            function saveMindmap(mindmap) {
+                let mindmaps = JSON.parse(localStorage.getItem('mindmaps')) || [];
+                if (currentMindmapIndex !== null) {
+                    mindmaps[currentMindmapIndex] = mindmap;
+                } else {
+                    mindmaps.push(mindmap);
+                }
+                localStorage.setItem('mindmaps', JSON.stringify(mindmaps));
+                loadMindmaps();
+            }
+
+            function loadMindmaps() {
+                let mindmaps = JSON.parse(localStorage.getItem('mindmaps')) || [];
+                let container = $('#mindmaps-container');
+                container.empty();
+                mindmaps.forEach(function(mindmap, index) {
+                    container.append(`<div class="mindmap-node" style="background-color: ${mindmap.color};">
+                        ${mindmap.content}
+                        <button class="edit-btn" onclick="editMindmap(${index})">Edit</button>
+                        <button class="delete-btn" onclick="deleteMindmap(${index})">Delete</button>
+                    </div>`);
+                });
+            }
+
+            window.editFlashcard = function(index) {
+                let flashcards = JSON.parse(localStorage.getItem('flashcards')) || [];
+                let flashcard = flashcards[index];
+                currentFlashcardIndex = index;
+                flashcardModalTitle.text('Edit Flashcard');
+                $('#flashcardHeading').val(flashcard.heading);
+                $('#flashcardContent').val(flashcard.content);
+                $('#flashcardFontSize').val(flashcard.fontSize);
+                flashcardModal.show();
+            };
+
+            window.deleteFlashcard = function(index) {
+                let flashcards = JSON.parse(localStorage.getItem('flashcards')) || [];
+                flashcards.splice(index, 1);
+                localStorage.setItem('flashcards', JSON.stringify(flashcards));
+                loadFlashcards();
+            };
+
+            window.editMindmap = function(index) {
+                let mindmaps = JSON.parse(localStorage.getItem('mindmaps')) || [];
+                let mindmap = mindmaps[index];
+                currentMindmapIndex = index;
+                mindmapModalTitle.text('Edit Mind Map');
+                $('#mindmapNode').val(mindmap.content);
+                $('#mindmapColor').val(mindmap.color);
+                mindmapModal.show();
+            };
+
+            window.deleteMindmap = function(index) {
+                let mindmaps = JSON.parse(localStorage.getItem('mindmaps')) || [];
+                mindmaps.splice(index, 1);
+                localStorage.setItem('mindmaps', JSON.stringify(mindmaps));
+                loadMindmaps();
+            };
+        });
+    </script>
+</body>
+</html>

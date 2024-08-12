@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>AI-based Personalized Study Plan</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .container-fluid {
+            padding: 0;
+        }
+
+        .container-fluid .row {
+            margin-left: 0;
+            margin-right: 0;
+        }
+
+        .col-lg-10 {
+            padding-left: 15px;
+            padding-right: 15px;
+        }
+
+        .btn {
+            position: relative;
+            overflow: hidden;
+            transition: color 0.4s;
+            padding: 0.75rem 1.25rem;
+            font-size: 1.25rem;
+            cursor: pointer;
+            border-radius: 50px;
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            background: rgba(255, 255, 255, 0.5);
+            border-radius: 50%;
+            transition: width 0.5s ease, height 0.5s ease, top 0.5s ease, left 0.5s ease;
+            pointer-events: none;
+        }
+
+        .btn-animate:active::before {
+            width: 300%;
+            height: 300%;
+            top: 50%;
+            left: 50%;
+        }
+
+        .btn-animate span {
+            position: relative;
+            z-index: 1;
+        }
+
+        body {
+            background: linear-gradient(135deg, #243B55, #141E30);
+            color: #ffffff;
+            font-family: 'Roboto', sans-serif;
+        }
+
+        h2 {
+            font-weight: 700;
+            letter-spacing: 1.5px;
+            margin-bottom: 1.5rem;
+            white-space: nowrap;
+            overflow: hidden;
+            border-right: 4px solid;
+        }
+
+        .form-control {
+            background-color: rgba(255, 255, 255, 0.1);
+            border: 1px solid #ced4da;
+            color: #ffffff;
+            padding: 1rem;
+            font-size: 1.1rem;
+            border-radius: 15px;
+        }
+
+        .form-control:focus {
+            background-color: rgba(255, 255, 255, 0.2);
+            box-shadow: none;
+            border-color: #28a745;
+        }
+
+        .form-label {
+            color: #ffffff;
+            font-size: 1.1rem;
+        }
+
+        .shadow-sm {
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.2) !important;
+        }
+
+        .info-bar {
+            background-color: #4a4af6;
+            color: #ffffff;
+            padding: 10px;
+            text-align: center;
+            font-weight: 500;
+            cursor: pointer;
+            border-radius: 50px;
+            transition: background-color 0.3s;
+        }
+
+        .info-bar:hover {
+            background-color: #3838f6;
+        }
+
+        .info-content {
+            display: none;
+            background-color: #4a4af6;
+            color: #ffffff;
+            padding: 15px;
+            border-radius: 15px;
+            border: 1px solid #ffffff;
+            margin-top: 10px;
+        }
+
+        .info-bar.active + .info-content {
+            display: block;
+        }
+
+        .card {
+            background-color: rgba(0, 0, 0, 0.7);
+            border-radius: 15px;
+        }
+
+        .rocket-widget {
+            width: 40px;
+            height: 40px;
+            background-image: url('https://img.icons8.com/ios-filled/50/000000/rocket.png');
+            background-size: contain;
+            background-repeat: no-repeat;
+            margin-left: 10px;
+        }
+
+        .rocket-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="info-bar">
+        Instructions for Use
+    </div>
+    <div class="info-content">
+        Share your study journey with me! What are your goals? How’s your current situation? Do you have resources at hand? And when it comes to study style, what floats your boat? Plus, how many daily study hours are you aiming for? Feel free to sprinkle in any other relevant details—I’m all ears! 📚🚀
+    </div>
+
+    <div class="container-fluid mt-5">
+        <div class="row justify-content-center">
+            <div class="col-lg-10">
+                <h2>AI-based Personalized Study Plan🤖🧠🇦🇮👾</h2>
+                <form method="POST" class="p-4 rounded shadow-sm bg-light bg-opacity-75">
+                    <div class="mb-4">
+                        <label for="study_details" class="form-label text-dark">Enter your study details</label>
+                        <textarea class="form-control" id="study_details" name="study_details" rows="5" required></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-success w-100 btn-animate" id="generate-plan-btn">
+                        <span>Generate Study Plan</span>
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Rocket Widget -->
+    <div class="rocket-container">
+        <div class="rocket-widget"></div>
+    </div>
+
+    <!-- Future Features Section -->
+    <div class="container mt-5">
+        <div class="card bg-dark text-white">
+            <div class="card-body">
+                <h5 class="card-title">Future Features</h5>
+                <p class="card-text">Coming Soon:</p>
+                <ul>
+                    <li>Interactive study plan ToDo Notifications </li>
+                    <li>Integration with calendar apps</li>
+                    <li>Real-time progress tracking</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+
+
+    <script>
+        document.querySelector('.info-bar').addEventListener('click', function() {
+            this.classList.toggle('active');
+        });
+
+        document.getElementById('generate-plan-btn').addEventListener('click', function (e) {
+            let btn = e.currentTarget;
+            let rect = btn.getBoundingClientRect();
+            let ripple = document.createElement('span');
+            ripple.className = 'ripple';
+            ripple.style.left = `${e.clientX - rect.left}px`;
+            ripple.style.top = `${e.clientY - rect.top}px`;
+            btn.appendChild(ripple);
+
+            setTimeout(() => {
+                ripple.remove();
+            }, 600); // Duration of the ripple animation
+        });
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

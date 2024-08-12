@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Notes Making</title>
+    <style>
+        body {
+            background: #f4f4f9;
+            color: #333;
+            font-family: 'Arial', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            background: #fff;
+            border-radius: 15px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 1000px;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            height: 90vh;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .header h2 {
+            margin: 0;
+            color: #333;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            margin-bottom: 20px;
+            flex: 1;
+        }
+
+        .form-group label {
+            margin-bottom: 5px;
+            color: #555;
+        }
+
+        .form-group textarea {
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            resize: vertical;
+            height: 250px;
+            outline: none;
+            font-size: 16px;
+            color: #333;
+            flex: 1;
+        }
+
+        .button-group {
+            display: flex;
+            justify-content: flex-end;
+        }
+
+        .button-group button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            background: #5a67d8;
+            color: #fff;
+            cursor: pointer;
+            transition: background 0.3s;
+            font-size: 16px;
+            margin-right: 10px;
+        }
+
+        .button-group button:hover {
+            background: #434190;
+        }
+
+        .response {
+            margin-top: 20px;
+            padding: 20px;
+            border-radius: 5px;
+            background: #f7fafc;
+            border-left: 5px solid #5a67d8;
+            color: #333;
+            font-size: 16px;
+            line-height: 1.8;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            overflow-x: auto;
+            font-family: 'Arial', sans-serif;
+            max-height: 50vh;
+            overflow-y: auto;
+        }
+
+        .loading {
+            display: none;
+            margin-top: 20px;
+            text-align: center;
+            color: #5a67d8;
+            font-size: 16px;
+        }
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/2.2.9/purify.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/html2pdf.js@0.9.2/dist/html2pdf.bundle.min.js"></script>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h2>Notes Making</h2>
+        </div>
+        <div class="form-group">
+            <label for="notes-input">Enter your notes:</label>
+            <textarea id="notes-input" placeholder="Type your notes here..."></textarea>
+        </div>
+        <div class="button-group">
+            <button onclick="submitNotes()">Generate Notes</button>
+            <button onclick="saveAsPDF()">Save as PDF</button>
+        </div>
+        <div class="loading" id="loading">Generating notes, please wait...</div>
+        <div class="response" id="response"></div>
+    </div>
+    <script>
+        async function submitNotes() {
+            const notesInput = document.getElementById('notes-input').value;
+            const loadingIndicator = document.getElementById('loading');
+            const responseContainer = document.getElementById('response');
+
+            if (notesInput.trim() === "") {
+                responseContainer.textContent = "Please enter some notes.";
+                return;
+            }
+
+            loadingIndicator.style.display = 'block';
+            responseContainer.textContent = "";
+
+            try {
+                const response = await fetch('/notes_making', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                    },
+                    body: new URLSearchParams({ notes: notesInput })
+                }).then(res => res.json());
+
+                const sanitizedResponse = DOMPurify.sanitize(response.solution);
+                const htmlResponse = marked.parse(sanitizedResponse);
+                responseContainer.innerHTML = htmlResponse;
+            } catch (error) {
+                console.error('Error:', error);
+                responseContainer.textContent = "An error occurred while generating notes.";
+            } finally {
+                loadingIndicator.style.display = 'none';
+            }
+        }
+
+        async function saveAsPDF() {
+            const notesInput = document.getElementById('notes-input').value;
+            const responseContainer = document.getElementById('response').innerHTML;
+
+            if (notesInput.trim() === "" || responseContainer.trim() === "") {
+                alert("Please generate notes first before saving as PDF.");
+                return;
+            }
+
+            try {
+                const response = await fetch('/save_notes_as_pdf', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ notes: notesInput, response: responseContainer })
+                });
+
+                if (response.ok) {
+                    const blob = await response.blob();
+                    const url = window.URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = 'notes.pdf';
+                    document.body.appendChild(a);
+                    a.click();
+                    a.remove();
+                    window.URL.revokeObjectURL(url);
+                } else {
+                    console.error('Error generating PDF:', response.statusText);
+                    alert('Error generating PDF: ' + response.statusText);
+                }
+            } catch (error) {
+                console.error('Error generating PDF:', error);
+                alert('Error generating PDF: ' + error.message);
+            }
+        }
+    </script>
+</body>
+</html>

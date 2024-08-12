@@ -1,0 +1,70 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="card shadow-sm">
+        <div class="card-body">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h2 class="text-primary fw-bold">Physics Questions</h2>
+                <div>
+                    <span id="solved-questions" class="badge bg-success fs-6">Questions Solved: {{ solved_questions }}</span>
+                    <span id="timer" class="badge bg-secondary fs-6 ms-2"></span>
+                </div>
+            </div>
+
+            <div class="list-group">
+                {% for index, question in questions %}
+                    <a href="{{ url_for('solve_question', qid=index) }}" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center py-3 question-item" data-question-id="{{ index }}">
+                        <span><i class="fas fa-atom me-2"></i> Question {{ index }}</span>
+                        <span class="badge bg-primary rounded-pill">Start</span>
+                    </a>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Initialize local storage
+    if (!localStorage.getItem('solvedQuestions')) {
+        localStorage.setItem('solvedQuestions', JSON.stringify([]));
+    }
+
+    // Update solved questions count
+    function updateSolvedQuestions() {
+        const solvedQuestions = JSON.parse(localStorage.getItem('solvedQuestions'));
+        const solvedCount = solvedQuestions.length;
+        document.getElementById('solved-questions').textContent = `Questions Solved: ${solvedCount}`;
+
+        // Update question items
+        document.querySelectorAll('.question-item').forEach(item => {
+            const questionId = item.dataset.questionId;
+            if (solvedQuestions.includes(questionId)) {
+                item.classList.add('list-group-item-success');
+                item.querySelector('.badge').textContent = 'Solved';
+                item.querySelector('.badge').classList.replace('bg-primary', 'bg-success');
+            }
+        });
+    }
+
+    // Mark question as solved when clicked
+    document.querySelectorAll('.question-item').forEach(item => {
+        item.addEventListener('click', function(e) {
+            const questionId = this.dataset.questionId;
+            const solvedQuestions = JSON.parse(localStorage.getItem('solvedQuestions'));
+            if (!solvedQuestions.includes(questionId)) {
+                solvedQuestions.push(questionId);
+                localStorage.setItem('solvedQuestions', JSON.stringify(solvedQuestions));
+                updateSolvedQuestions();
+            }
+        });
+    });
+
+
+
+    // Initial update
+    updateSolvedQuestions();
+});
+</script>
+{% endblock %}

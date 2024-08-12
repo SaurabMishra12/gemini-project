@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Select Shift</title>
+    <!-- External CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.1.3/css/bootstrap.min.css">
+    <!-- Custom CSS -->
+    <style>
+        body {
+            background: linear-gradient(135deg, #1e5799, #7db9e8);
+            color: #fff;
+            font-family: 'Roboto', sans-serif;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 50px auto;
+            padding: 30px;
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+            animation: fadeInUp 1s ease-out;
+        }
+
+        @keyframes fadeInUp {
+            0% {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .list-group-item {
+            font-size: 1.2rem;
+            padding: 15px;
+            margin-bottom: 10px;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            background-color: rgba(255, 255, 255, 0.3);
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .list-group-item a {
+            color: #fff;
+            text-decoration: none;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .list-group-item a:hover {
+            background-color: rgba(255, 255, 255, 0.5);
+            color: #333;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        .list-group-item a .shift-icon {
+            font-size: 1.5rem;
+            margin-right: 10px;
+        }
+
+        .list-group-item a .fas {
+            color: #007bff;
+        }
+
+        .list-group {
+            padding-left: 0;
+            list-style-type: none;
+        }
+
+        .glowing-border {
+            animation: glowing-border 1500ms infinite linear;
+            border: 2px solid #fff;
+            border-radius: 10px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        @keyframes glowing-border {
+            0% {
+                border-color: #00bfff;
+                box-shadow: 0 0 10px #00bfff;
+            }
+            50% {
+                border-color: #00e6e6;
+                box-shadow: 0 0 20px #00e6e6;
+            }
+            100% {
+                border-color: #00bfff;
+                box-shadow: 0 0 10px #00bfff;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container glowing-border">
+        <h1>Select Shift for Year {{ year }}</h1>
+        <ul class="list-group">
+            {% for shift in shifts %}
+                <li class="list-group-item">
+                    <a href="{{ url_for('previous_year_questions', year=year, shift=shift) }}">
+                        <span>{{ shift }}</span>
+                        <i class="fas fa-chevron-right shift-icon"></i>
+                    </a>
+                </li>
+            {% endfor %}
+        </ul>
+    </div>
+
+    <!-- Font Awesome -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/js/all.min.js" integrity="sha512-SuPCDUp4Zu10eV+l89BcTlH7jDF4g8kIq9z/vZEL0e4NIMJpZCNajm15vR4TLoRAtO3AvEz63MvG5lIVK+4jIw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+</body>
+</html>

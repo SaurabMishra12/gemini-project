@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Select Number of Questions</title>
+</head>
+<body>
+    <h1>Select Number of Questions</h1>
+    <form action="{{ url_for('select_questions') }}" method="post">
+        <label for="num_questions">Number of questions:</label>
+        <input type="number" id="num_questions" name="num_questions" min="1" required>
+        <button type="submit">Next</button>
+    </form>
+</body>
+</html>

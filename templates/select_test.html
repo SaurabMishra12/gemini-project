@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Select Practice Type</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <h2 class="mt-5">Select Practice Type</h2>
+        <div class="list-group">
+            <a href="{{ url_for('generate_test') }}" class="list-group-item list-group-item-action">Generate Test from Custom Questions</a>
+            <a href="{{ url_for('solve_dpp') }}" class="list-group-item list-group-item-action">Solve DPP</a>
+            <a href="{{ url_for('practice_jee_mains') }}" class="list-group-item list-group-item-action">Practice JEE Mains Questions</a>
+            <a href="{{ url_for('practice_jee_advance') }}" class="list-group-item list-group-item-action">Practice JEE Advance Questions</a>
+            <a href="{{ url_for('practice_hcv') }}" class="list-group-item list-group-item-action">Practice HCV Questions</a>
+            <a href="{{ url_for('practice_ncert') }}" class="list-group-item list-group-item-action">Practice NCERT Questions</a>
+            <a href="{{ url_for('practice_olympiad') }}" class="list-group-item list-group-item-action">Practice Olympiad Questions</a>
+            <a href="{{ url_for('practice_random') }}" class="list-group-item list-group-item-action">Practice Random/Trademark Questions</a>
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

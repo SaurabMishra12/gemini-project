@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Virtual Lab Simulations</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/matter-js/0.17.1/matter.min.js"></script>
+</head>
+<body class="bg-gray-100 font-sans">
+    <div class="min-h-screen flex flex-col">
+        <header class="bg-indigo-600 text-white py-6">
+            <div class="container mx-auto px-4">
+                <h1 class="text-3xl font-bold">Virtual Lab Simulations</h1>
+                <p class="text-lg mt-2">Bridge theory and practice with state-of-the-art virtual experiments</p>
+            </div>
+        </header>
+
+        <main class="flex-grow container mx-auto px-4 py-8">
+            <section class="mb-8">
+                <div class="bg-white rounded-lg shadow-md p-6 mb-6">
+                    <h2 class="text-2xl font-semibold mb-4">Explore Experiments</h2>
+                    <div class="flex flex-wrap -mx-2">
+                        <div class="px-2 w-full sm:w-1/2 md:w-1/3 lg:w-1/4 mb-4">
+                            <select id="subject-filter" class="block appearance-none w-full bg-white border border-gray-400 hover:border-gray-500 px-4 py-2 pr-8 rounded shadow leading-tight focus:outline-none focus:shadow-outline">
+                                <option value="all">All Subjects</option>
+                                <option value="physics">Physics</option>
+                                <option value="chemistry">Chemistry</option>
+                                <option value="biology">Biology</option>
+                            </select>
+                        </div>
+                        <div class="px-2 w-full sm:w-1/2 md:w-2/3 lg:w-3/4 mb-4">
+                            <input id="search-input" class="appearance-none block w-full bg-white text-gray-700 border border-gray-400 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500" type="text" placeholder="Search experiments...">
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="experiment-list" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- Experiment cards will be dynamically populated here -->
+            </section>
+        </main>
+
+        <footer class="bg-gray-200 py-4 mt-8">
+            <div class="container mx-auto px-4 text-center text-gray-600">
+                <p></p>
+            </div>
+        </footer>
+    </div>
+
+    <!-- Modal for experiment details -->
+    <div id="experiment-modal" class="fixed z-10 inset-0 overflow-y-auto hidden" aria-labelledby="modal-title" role="dialog" aria-modal="true">
+        <div class="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
+            <div class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" aria-hidden="true"></div>
+            <span class="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
+            <div class="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
+                <div class="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
+                    <div class="sm:flex sm:items-start">
+                        <div class="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
+                            <h3 class="text-lg leading-6 font-medium text-gray-900" id="modal-title"></h3>
+                            <div class="mt-2">
+                                <p class="text-sm text-gray-500" id="modal-description"></p>
+                                <div id="simulation-container" class="mt-4"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
+                    <button type="button" id="start-simulation" class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-indigo-600 text-base font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:ml-3 sm:w-auto sm:text-sm">
+                        Start Simulation
+                    </button>
+                    <button type="button" id="close-modal" class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm">
+                        Close
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            const experiments = [
+                { id: 1, name: "Pendulum Motion", subject: "physics", description: "Explore the principles of simple harmonic motion using a virtual pendulum.", simulation: "pendulum" },
+                { id: 2, name: "Titration", subject: "chemistry", description: "Perform acid-base titrations and learn about chemical equilibrium.", simulation: null },
+                { id: 3, name: "Cell Division", subject: "biology", description: "Observe and interact with the stages of mitosis and meiosis.", simulation: null },
+                { id: 4, name: "Ohm's Law", subject: "physics", description: "Investigate the relationship between voltage, current, and resistance.", simulation: null },
+                { id: 5, name: "DNA Extraction", subject: "biology", description: "Extract DNA from virtual cells and visualize its structure.", simulation: null },
+                { id: 6, name: "Gas Laws", subject: "chemistry", description: "Explore the behavior of gases under different conditions of temperature and pressure.", simulation: null },
+                { id: 7, name: "Photosynthesis", subject: "biology", description: "Simulate the process of photosynthesis and measure oxygen production.", simulation: null },
+                { id: 8, name: "Projectile Motion", subject: "physics", description: "Study the trajectory of projectiles under various initial conditions.", simulation: "projectile" },
+                { id: 9, name: "Fractional Distillation", subject: "chemistry", description: "Separate components of a mixture based on their boiling points.", simulation: null }
+            ];
+
+            function createExperimentCard(experiment) {
+                return `
+                    <div class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300" data-experiment-id="${experiment.id}">
+                        <div class="p-6">
+                            <h3 class="text-xl font-semibold mb-2">${experiment.name}</h3>
+                            <p class="text-gray-600 mb-4">${experiment.subject.charAt(0).toUpperCase() + experiment.subject.slice(1)}</p>
+                            <button class="experiment-details inline-block bg-indigo-500 hover:bg-indigo-600 text-white font-bold py-2 px-4 rounded transition duration-300 ease-in-out">
+                                View Details
+                            </button>
+                        </div>
+                    </div>
+                `;
+            }
+
+            function displayExperiments(experimentsArray) {
+                const experimentList = $('#experiment-list');
+                experimentList.empty();
+                experimentsArray.forEach(experiment => {
+                    experimentList.append(createExperimentCard(experiment));
+                });
+            }
+
+            displayExperiments(experiments);
+
+            $('#subject-filter, #search-input').on('change keyup', function() {
+                const selectedSubject = $('#subject-filter').val();
+                const searchTerm = $('#search-input').val().toLowerCase();
+
+                const filteredExperiments = experiments.filter(experiment =>
+                    (selectedSubject === 'all' || experiment.subject === selectedSubject) &&
+                    (experiment.name.toLowerCase().includes(searchTerm) ||
+                     experiment.description.toLowerCase().includes(searchTerm))
+                );
+
+                displayExperiments(filteredExperiments);
+            });
+
+            $(document).on('click', '.experiment-details', function() {
+                const experimentId = $(this).closest('[data-experiment-id]').data('experiment-id');
+                const experiment = experiments.find(exp => exp.id === experimentId);
+
+                $('#modal-title').text(experiment.name);
+                $('#modal-description').text(experiment.description);
+                $('#simulation-container').empty();
+
+                if (experiment.simulation) {
+                    $('#start-simulation').show();
+                } else {
+                    $('#start-simulation').hide();
+                }
+
+                $('#experiment-modal').removeClass('hidden');
+            });
+
+            $('#close-modal').click(function() {
+                $('#experiment-modal').addClass('hidden');
+            });
+
+            $('#start-simulation').click(function() {
+                const experimentId = $(this).closest('[data-experiment-id]').data('experiment-id');
+                const experiment = experiments.find(exp => exp.id === experimentId);
+
+                $('#simulation-container').empty();
+                startSimulation(experiment.simulation);
+            });
+
+            function startSimulation(simulation) {
+                if (simulation === "pendulum") {
+                    runPendulumSimulation();
+                } else if (simulation === "projectile") {
+                    runProjectileSimulation();
+                }
+                // Add other simulations here...
+            }
+
+            function runPendulumSimulation() {
+                const Engine = Matter.Engine,
+                      Render = Matter.Render,
+                      Runner = Matter.Runner,
+                      Bodies = Matter.Bodies,
+                      Constraint = Matter.Constraint,
+                      World = Matter.World;
+
+                const engine = Engine.create();
+                const world = engine.world;
+
+                const render = Render.create({
+                    element: document.getElementById('simulation-container'),
+                    engine: engine,
+                    options: {
+                        width: 800,
+                        height: 600,
+                        wireframes: false
+                    }
+                });
+
+                const pendulum = Bodies.circle(400, 200, 40, { density: 1, frictionAir: 0.001 });
+                const ceiling = { x: 400, y: 100 };
+
+                const string = Constraint.create({
+                    pointA: ceiling,
+                    bodyB: pendulum,
+                    stiffness: 1,
+                    length: 200
+                });
+
+                World.add(world, [pendulum, string]);
+
+                Render.run(render);
+                const runner = Runner.create();
+                Runner.run(runner, engine);
+            }
+
+            function runProjectileSimulation() {
+                const Engine = Matter.Engine,
+                      Render = Matter.Render,
+                      Runner = Matter.Runner,
+                      Bodies = Matter.Bodies,
+                      World = Matter.World;
+
+                const engine = Engine.create();
+                const world = engine.world;
+
+                const render = Render.create({
+                    element: document.getElementById('simulation-container'),
+                    engine: engine,
+                    options: {
+                        width: 800,
+                        height: 600,
+                        wireframes: false
+                    }
+                });
+
+                const ground = Bodies.rectangle(400, 590, 810, 60, { isStatic: true });
+                const projectile = Bodies.circle(100, 500, 20, { density: 0.04 });
+
+                const force = (angle, strength) => {
+                    const radians = angle * (Math.PI / 180);
+                    const forceX = strength * Math.cos(radians);
+                    const forceY = strength * Math.sin(radians) * -1; // negative for upward force
+                    return { x: forceX, y: forceY };
+                };
+
+                World.add(world, [ground, projectile]);
+
+                Render.run(render);
+                const runner = Runner.create();
+                Runner.run(runner, engine);
+
+                // Apply a force to the projectile
+                Matter.Body.applyForce(projectile, projectile.position, force(45, 0.05)); // 45-degree angle with 0.05 strength
+            }
+        });
+    </script>
+</body>
+</html>
