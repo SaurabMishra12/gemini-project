@@ -1,11 +1,18 @@
 # Step Mentor
 
-Brief about the Idea: The idea involves developing a system that helps the Students practice questions. It will generate clear problem statements using GenAI, suggest relevant formulas, and present solutions step-by-step in the given time frame; the prototype features GenAI API for question descriptions and chatbot and machine learning for formula suggestions. Opportunity : How different is it from any other existing ideas out there? The proposed model stands out with its comprehensive learning support, leveraging advanced technologies like Prompt Engineering and Machine learning. It offers a personalized learning experience akin to having a personal tutor. These features distinguish it from existing platforms, ensuring a unique and effective study tool for JEE students. The dataset used for practising questions is imported from Online Data Lakes; some of the questions are handpicked from this dataset to show the potential of the prototypes in handling the different levels of questions.
+Brief about the Idea: The idea involves developing a system that helps the Students practice questions and fulfill their other needs powered with AI. It will generate clear problem statements using GenAI, suggest relevant formulas,hints and present solutions step-by-step in the given time frame; the prototype features GenAI API for question descriptions and chatbot and machine learning for formula suggestions.
+
+
+Opportunity : How different is it from any other existing ideas out there? The proposed model stands out with its comprehensive learning support, leveraging advanced technologies like Prompt Engineering and Machine learning, web development. It offers a personalized learning experience akin to having a personal tutor. These features distinguish it from existing platforms, ensuring a unique and effective study tool for students. The dataset used for practising questions is imported from Online Data Lakes; some of the questions are handpicked from this dataset to show the potential of the prototypes in handling the different levels of questions.
 
 
 How will it be able to solve the problem?
 
-The app solves the problem of effective question practice for JEE students through several key mechanisms: Comprehensive Guidance: By providing step-by-step solutions, formula suggestions, and chatbot assistance, the app guides students through the question-solving process, ensuring they understand each step thoroughly. Free Accessibility: Offering free access to all users, the app removes cost barriers and ensures inclusivity, allowing students from diverse backgrounds to benefit from high-quality educational support. Empowerment through Practice: By facilitating regular practice and providing detailed explanations and assistance, the app empowers students to develop their problem-solving skills and deepen their understanding of physics concepts, ultimately improving their performance in the JEE exam.
+The app solves the problem of effective question practice for JEE students through several key mechanisms:
+
+Comprehensive Guidance: By providing step-by-step solutions, formula suggestions,hints and chatbot assistance, the app guides students through the question-solving process, ensuring they understand each step thoroughly.
+
+Free Accessibility: Offering free access to all users, the app removes cost barriers and ensures inclusivity, allowing students from diverse backgrounds to benefit from high-quality educational support. Empowerment through Practice: By facilitating regular practice and providing detailed explanations and assistance, the app empowers students to develop their problem-solving skills and deepen their understanding of physics concepts, ultimately improving their performance in the JEE exam.
 
 List of features offered by the solution :
 
